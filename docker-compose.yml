@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+        postgres_db:
+                container_name: "data_collection_db"
+                image: postgres:12.1
+                environment:
+                        POSTGRES_PASSWORD: admin
+                        POSTGRES_USER: admin
+                ports:
+                        - "5432:5432"
+                volumes:
+                        - ./postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
