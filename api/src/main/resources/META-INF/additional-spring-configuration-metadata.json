@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "default.admin.username",
+      "type": "java.lang.String",
+      "description": "Default username of admin account."
+    },
+    {
+      "name": "default.admin.password",
+      "type": "java.lang.String",
+      "description": "Default password of admin account."
+    },
+    {
+      "name": "default.time.format",
+      "type": "java.lang.String",
+      "description": "Default time format."
+    }
+  ] }
