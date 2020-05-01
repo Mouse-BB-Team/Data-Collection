@@ -13,7 +13,7 @@ create table dc.events(
 
 create table dc.users(
     id serial primary key,
-    login varchar(255) not null ,
+    login varchar(255) not null unique,
     password varchar(255) not null,
     authority varchar(255) not null
 );
@@ -30,5 +30,9 @@ create table dc.sessions
     foreign key (user_id) references dc.users(id),
     foreign key (event_id) references dc.events(id)
 );
+
+create unique index on dc.users(login);
+create index on dc.sessions(user_id);
+create index on dc.sessions(event_id);
 
 commit;
