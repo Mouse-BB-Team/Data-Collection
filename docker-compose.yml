@@ -1,4 +1,8 @@
 version: '3.7'
+networks:
+        dc_network:
+                ipam:
+                        driver: default
 services:
         postgres_db:
                 container_name: "data_collection_db"
@@ -10,3 +14,21 @@ services:
                         - "5432:5432"
                 volumes:
                         - ./postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
+                networks:
+                        dc_network:
+        dc_api:
+                container_name: "data_collection_api"
+                build: ./api/
+                ports:
+                        - "8080:8080"
+                environment:
+                        - "SPRING_PROFILES_ACTIVE=admin"
+                        - "SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/data_collection"
+                        - "SPRING_DATASOURCE_USERNAME=admin"
+                        - "SPRING_DATASOURCE_PASSWORD=admin"
+                        - "DEFAULT_ADMIN_USERNAME=admin"
+                        - "DEFAULT_ADMIN_PASSWORD=admin"
+                networks:
+                        dc_network:
+                depends_on:
+                        - postgres_db
