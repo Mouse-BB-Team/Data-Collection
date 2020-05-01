@@ -9,7 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
+class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @WarningLog
     @ExceptionHandler(value = Exception.class)

@@ -15,7 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 @Aspect
 @Configuration
 @Profile(value = {ProfileType.ONLY_ADMIN_CREATES_USERS, ProfileType.USERS_CREATE_THEMSELVES})
-public class LogsHandler {
+class LogsHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Pointcut(value = "execution(org.springframework.http.ResponseEntity *.*(..)) && args(..,request) && @annotation(pl.edu.agh.data_collection.config.WarningLog)")
