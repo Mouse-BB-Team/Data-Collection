@@ -1,18 +1,20 @@
 package pl.edu.agh.data_collection.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 import pl.edu.agh.data_collection.config.ContextPath;
 import pl.edu.agh.data_collection.dto.SessionDto;
 import pl.edu.agh.data_collection.persistence.entity.EventEntity;
 import pl.edu.agh.data_collection.persistence.entity.SessionEntity;
 import pl.edu.agh.data_collection.persistence.repository.EventRepository;
 import pl.edu.agh.data_collection.persistence.repository.SessionRepository;
+import pl.edu.agh.data_collection.persistence.repository.UserRepository;
+import pl.edu.agh.data_collection.utils.AuthorizationHeaderValueParser;
+import pl.edu.agh.data_collection.utils.LoginParser;
 import pl.edu.agh.data_collection.utils.TimestampParser;
 
 import java.text.ParseException;
@@ -24,21 +26,29 @@ public class SessionModel {
 
     private final SessionRepository sessionRepository;
     private final EventRepository eventRepository;
-    private final TimestampParser parser;
+    private final UserRepository userRepository;
+    private final TimestampParser timestampParser;
+    private final LoginParser loginParser;
+    private final AuthorizationHeaderValueParser authorizationHeaderParser;
 
     @Autowired
-    public SessionModel(SessionRepository sessionRepository, EventRepository eventRepository, TimestampParser parser) {
+    public SessionModel(SessionRepository sessionRepository, EventRepository eventRepository, UserRepository userRepository, TimestampParser timestampParser, LoginParser loginParser, AuthorizationHeaderValueParser authorizationHeaderParser) {
         this.sessionRepository = sessionRepository;
         this.eventRepository = eventRepository;
-        this.parser = parser;
+        this.userRepository = userRepository;
+        this.timestampParser = timestampParser;
+        this.loginParser = loginParser;
+        this.authorizationHeaderParser = authorizationHeaderParser;
     }
 
     @PostMapping(ContextPath.SESSION_ADD_ELEMENT_PATH)
-    public ResponseEntity<Object> addSessionElement(@RequestBody SessionDto sessionDto) throws ParseException {
+    public ResponseEntity<Object> addSessionElement(@RequestBody SessionDto sessionDto, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String header) throws ParseException {
         List<SessionEntity> sessions = new LinkedList<>();
 
+        Long userId = getUserIdFromHeader(header);
+
         for(SessionDto.SessionElement element : sessionDto.getSessions()){
-            SessionEntity sessionEntity = buildSessionEntityOutOfDao(element);
+            SessionEntity sessionEntity = buildSessionEntityOutOfDao(element, userId);
             sessions.add(sessionEntity);
         }
 
@@ -47,9 +57,16 @@ public class SessionModel {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    private SessionEntity buildSessionEntityOutOfDao(SessionDto.SessionElement element) throws ParseException {
+    private Long getUserIdFromHeader(String header) throws ParseException {
+        String headerValue = authorizationHeaderParser.parse(header);
+        String login = loginParser.parse(headerValue);
+        Optional<Long> optionalId = userRepository.getIdByLogin(login);
+        return optionalId.orElseThrow(() -> new UsernameNotFoundException(login + "not found!"));
+    }
+
+    private SessionEntity buildSessionEntityOutOfDao(SessionDto.SessionElement element, Long userId) throws ParseException {
         SessionEntity sessionEntity = new SessionEntity();
-        sessionEntity.setUserId(element.getUser_id());
+        sessionEntity.setUserId(userId);
         sessionEntity.setX(element.getX_cor());
         sessionEntity.setY(element.getY_cor());
 
@@ -57,7 +74,7 @@ public class SessionModel {
 
         sessionEntity.setEvent(foundEventOptional.orElse(new EventEntity()).getId());
 
-        sessionEntity.setEventTime(parser.parse(element.getTime()));
+        sessionEntity.setEventTime(timestampParser.parse(element.getTime()));
 
         return sessionEntity;
     }

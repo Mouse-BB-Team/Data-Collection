@@ -3,7 +3,6 @@ package pl.edu.agh.data_collection.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +34,6 @@ public class UserModel {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Secured(UserRole.ADMIN)
     @PostMapping(ContextPath.USER_CREATE_PATH)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto userDto, Errors errors) throws BadCredentialsException {
         if(errors.hasErrors())

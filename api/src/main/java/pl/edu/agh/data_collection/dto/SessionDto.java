@@ -17,7 +17,6 @@ public class SessionDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SessionElement{
-        private Long user_id;
         private Integer x_cor;
         private Integer y_cor;
         private String event;

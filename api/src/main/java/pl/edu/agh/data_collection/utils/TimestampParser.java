@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 @Component
-public class TimestampParser {
+public class TimestampParser implements Parser<String, Calendar>{
 
     @Value("${default.time.format}")
     private String timestampFormat;
