@@ -14,7 +14,8 @@ create table dc.events(
 create table dc.users(
     id serial primary key,
     login varchar(255) not null ,
-    password varchar(255) not null
+    password varchar(255) not null,
+    authority varchar(255) not null
 );
 
 create table dc.sessions
@@ -24,7 +25,7 @@ create table dc.sessions
     x_coordinate integer check ( x_coordinate >= 0 ),
     y_coordinate integer check ( y_coordinate >= 0 ),
     event_id integer not null,
-    event_time timestamp not null,
+    time timestamp not null,
 
     foreign key (user_id) references dc.users(id),
     foreign key (event_id) references dc.events(id)
