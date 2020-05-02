@@ -1,7 +1,7 @@
 {
-  "name": "mouse_bb_http_server",
+  "name": "data_collecting_site",
   "version": "1.0.0",
-  "description": "",
+  "description": "Template html site to run script to collect mouse data",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
     "dev": "nodemon server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kamil Kaliś",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
@@ -17,5 +17,13 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bachelor-Degree-2020-2021/Data-Collection.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bachelor-Degree-2020-2021/Data-Collection/issues"
+  },
+  "homepage": "https://github.com/Bachelor-Degree-2020-2021/Data-Collection#readme"
 }
