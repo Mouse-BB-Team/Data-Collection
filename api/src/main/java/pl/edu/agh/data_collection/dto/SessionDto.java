@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.edu.agh.data_collection.config.validator.ProperEvent;
+import pl.edu.agh.data_collection.config.validator.ProperTimestamp;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -27,6 +28,7 @@ public class SessionDto {
         private Integer y_cor;
         @ProperEvent
         private String event;
+        @ProperTimestamp
         private String time;
     }
 }
