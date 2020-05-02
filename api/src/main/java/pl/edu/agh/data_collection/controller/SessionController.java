@@ -17,6 +17,7 @@ import pl.edu.agh.data_collection.utils.AuthorizationHeaderValueParser;
 import pl.edu.agh.data_collection.utils.LoginParser;
 import pl.edu.agh.data_collection.utils.TimestampParser;
 
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.*;
 
@@ -42,7 +43,7 @@ public class SessionController {
     }
 
     @PostMapping(ContextPath.SESSION_ADD_ELEMENT_PATH)
-    public ResponseEntity<Object> addSessionElement(@RequestBody SessionDto sessionDto, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String header) throws ParseException {
+    public ResponseEntity<Object> addSessionElement(@Valid @RequestBody SessionDto sessionDto, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String header) throws ParseException {
         List<SessionEntity> sessions = new LinkedList<>();
 
         Long userId = getUserIdFromHeader(header);
@@ -70,9 +71,9 @@ public class SessionController {
         sessionEntity.setX(element.getX_cor());
         sessionEntity.setY(element.getY_cor());
 
-        Optional<EventEntity> foundEventOptional = eventRepository.findByName(element.getEvent());
+        EventEntity foundEvent = eventRepository.findByName(element.getEvent());
 
-        sessionEntity.setEvent(foundEventOptional.orElse(new EventEntity()).getId());
+        sessionEntity.setEvent(foundEvent.getId());
 
         sessionEntity.setEventTime(timestampParser.parse(element.getTime()));
 

@@ -2,11 +2,12 @@ package pl.edu.agh.data_collection.persistence.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
