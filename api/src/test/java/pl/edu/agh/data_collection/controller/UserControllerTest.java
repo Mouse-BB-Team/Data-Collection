@@ -1,4 +1,4 @@
-package pl.edu.agh.data_collection.model;
+package pl.edu.agh.data_collection.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -30,9 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(UserModel.class)
+@WebMvcTest(UserController.class)
 @ActiveProfiles(value = ProfileType.TEST_PROFILE)
-class UserModelTest {
+class UserControllerTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 

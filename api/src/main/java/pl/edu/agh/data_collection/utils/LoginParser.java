@@ -6,8 +6,8 @@ import java.text.ParseException;
 import java.util.Base64;
 
 @Component
-public class LoginParser implements Parser<String, String>{
-    public String parse(String header) throws ParseException{
+public class LoginParser {
+    public String parse(String header) throws ParseException {
         byte[] decodedBytes = Base64.getDecoder().decode(header);
         String decodedString = new String(decodedBytes);
         int colonIndex = decodedString.indexOf(':');

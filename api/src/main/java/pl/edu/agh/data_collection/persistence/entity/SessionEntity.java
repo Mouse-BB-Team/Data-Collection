@@ -3,7 +3,7 @@ package pl.edu.agh.data_collection.persistence.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -20,6 +20,5 @@ public class SessionEntity {
     @Column(name = "event_id")
     private Long event;
     @Column(name = "event_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar eventTime;
+    private LocalDateTime eventTime;
 }

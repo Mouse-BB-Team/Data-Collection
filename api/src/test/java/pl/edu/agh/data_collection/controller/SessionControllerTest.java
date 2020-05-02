@@ -1,4 +1,4 @@
-package pl.edu.agh.data_collection.model;
+package pl.edu.agh.data_collection.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,9 +40,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(SessionModel.class)
+@WebMvcTest(SessionController.class)
 @ActiveProfiles(value = ProfileType.TEST_PROFILE)
-class SessionModelTest {
+class SessionControllerTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -66,7 +66,7 @@ class SessionModelTest {
     @Captor
     private ArgumentCaptor<List<SessionEntity>> sessionCaptor;
 
-    private static final String TIMESTAMP = "2012 Mar 13 16:02:35:322";
+    private static final String TIMESTAMP = "2012-03-13 16:02:35.322";
     private static final String EVENT_MOVE = "MOVE";
     private static final String EVENT_CLICK = "CLICK";
     private static final String USER_LOGIN = "admin";
@@ -136,7 +136,7 @@ class SessionModelTest {
         assertEquals(expectedSession, sessionCaptor.getValue());
     }
 
-    private SessionEntity buildSessionEntityOutOfDao(SessionDto.SessionElement element, EventEntity eventEntity) throws ParseException {
+    private SessionEntity buildSessionEntityOutOfDao(SessionDto.SessionElement element, EventEntity eventEntity) {
         SessionEntity sessionEntity = new SessionEntity();
         sessionEntity.setUserId(USER_ID);
         sessionEntity.setX(element.getX_cor());

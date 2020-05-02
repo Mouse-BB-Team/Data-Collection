@@ -1,4 +1,4 @@
-package pl.edu.agh.data_collection.model;
+package pl.edu.agh.data_collection.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,13 +23,13 @@ import static pl.edu.agh.data_collection.exception.BadCredentialsException.Excep
 
 @RestController
 @RequestMapping(ContextPath.USER_MAIN_PATH)
-public class UserModel {
+public class UserController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserModel(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

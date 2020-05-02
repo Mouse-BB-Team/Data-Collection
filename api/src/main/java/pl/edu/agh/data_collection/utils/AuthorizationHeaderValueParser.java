@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 
 @Component
-public class AuthorizationHeaderValueParser implements Parser<String, String>{
-    @Override
+public class AuthorizationHeaderValueParser{
     public String parse(String arg) throws ParseException {
         int index = arg.indexOf(' ');
 

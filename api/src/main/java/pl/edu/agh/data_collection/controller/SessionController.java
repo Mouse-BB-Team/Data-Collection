@@ -1,4 +1,4 @@
-package pl.edu.agh.data_collection.model;
+package pl.edu.agh.data_collection.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +22,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(ContextPath.SESSION_MAIN_PATH)
-public class SessionModel {
+public class SessionController {
 
     private final SessionRepository sessionRepository;
     private final EventRepository eventRepository;
@@ -32,7 +32,7 @@ public class SessionModel {
     private final AuthorizationHeaderValueParser authorizationHeaderParser;
 
     @Autowired
-    public SessionModel(SessionRepository sessionRepository, EventRepository eventRepository, UserRepository userRepository, TimestampParser timestampParser, LoginParser loginParser, AuthorizationHeaderValueParser authorizationHeaderParser) {
+    public SessionController(SessionRepository sessionRepository, EventRepository eventRepository, UserRepository userRepository, TimestampParser timestampParser, LoginParser loginParser, AuthorizationHeaderValueParser authorizationHeaderParser) {
         this.sessionRepository = sessionRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
@@ -64,7 +64,7 @@ public class SessionModel {
         return optionalId.orElseThrow(() -> new UsernameNotFoundException(login + "not found!"));
     }
 
-    private SessionEntity buildSessionEntityOutOfDao(SessionDto.SessionElement element, Long userId) throws ParseException {
+    private SessionEntity buildSessionEntityOutOfDao(SessionDto.SessionElement element, Long userId){
         SessionEntity sessionEntity = new SessionEntity();
         sessionEntity.setUserId(userId);
         sessionEntity.setX(element.getX_cor());

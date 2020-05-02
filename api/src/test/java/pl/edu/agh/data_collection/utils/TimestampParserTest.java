@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +14,7 @@ class TimestampParserTest {
 
     private static final TimestampParser parser = new TimestampParser();
 
-    private static final String TIMESTAMP_FORMAT = "yyyy MMM dd HH:mm:ss:SSSS";
+    private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     @BeforeAll
     static void setUp(){
@@ -20,26 +22,22 @@ class TimestampParserTest {
     }
 
     @Test
-    void parseTest() throws ParseException {
-        String properTimestamp = "2012 Mar 13 16:02:35:322";
+    void parseTest() {
+        String properTimestamp = "2012-03-13 16:02:35.322";
 
-        Calendar calendar = parser.parse(properTimestamp);
+        LocalDateTime time = parser.parse(properTimestamp);
 
-        assertEquals(2012, calendar.get(Calendar.YEAR));
-        assertEquals(3 - 1, calendar.get(Calendar.MONTH));
-        assertEquals(13, calendar.get(Calendar.DAY_OF_MONTH));
-        assertEquals(4, calendar.get(Calendar.HOUR));
-        assertEquals(1, calendar.get(Calendar.AM_PM));
-        assertEquals(2, calendar.get(Calendar.MINUTE));
-        assertEquals(35, calendar.get(Calendar.SECOND));
-        assertEquals(322, calendar.get(Calendar.MILLISECOND));
+        assertEquals(2012, time.getYear());
+        assertEquals(Month.MARCH, time.getMonth());
+        assertEquals(13, time.getDayOfMonth());
+        assertEquals(16, time.getHour());
+        assertEquals(2, time.getMinute());
+        assertEquals(35, time.getSecond());
+        assertEquals(322, nanoToMilli(time.getNano()));
     }
 
-    @Test
-    void parseThrowExceptionTest(){
-        String wrongTimestamp = "Mar 13 16:02:35:322";
-
-        assertThrows(ParseException.class, () -> parser.parse(wrongTimestamp));
+    private int nanoToMilli(int value){
+        return value / 1000_000;
     }
 
 }
