@@ -20,7 +20,7 @@ app.post('/api/store-data', (req, res) => {
         }
         collectedEventData.push(userEvent);
     }
-    console.log(`Got Post no ${collectedEventData.length}`)
+    console.log(`Got Post no ${collectedEventData}`)
     res.status(201).end();
 });
 

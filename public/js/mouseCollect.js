@@ -14,7 +14,6 @@ document.addEventListener('click', (e) => {
 });
 
 sendData = function () {
-    // if (mouseEvents.length !== 0){
         const dataToSend = mouseEvents;
         mouseEvents = [];
 
@@ -29,7 +28,6 @@ sendData = function () {
             }
 
         });
-    // }
 }
 
 sendData();
