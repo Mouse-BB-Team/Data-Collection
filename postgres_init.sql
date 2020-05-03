@@ -35,4 +35,15 @@ create unique index on dc.users(login);
 create index on dc.sessions(user_id);
 create index on dc.sessions(event_id);
 
+insert into dc.events
+VALUES (1, 'MOVE'),
+       (2, 'LEFT_DOWN'),
+       (3, 'LEFT_UP'),
+       (4, 'RIGHT_DOWN'),
+       (5, 'RIGHT_UP'),
+       (6, 'SCROLL_DOWN'),
+       (7, 'SCROLL_UP'),
+       (8, 'SCROLL_PUSH'),
+       (9, 'SCROLL_PULL');
+
 commit;
