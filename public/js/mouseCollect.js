@@ -107,36 +107,3 @@ function getEventTime() {
     const t = new Date();
     return `${t.getFullYear()}-${zero_str_padding(t.getMonth() + 1)}-${zero_str_padding(t.getDate())} ${zero_str_padding(t.getHours())}:${zero_str_padding(t.getMinutes())}:${zero_str_padding(t.getSeconds())}.${zero_str_padding_mls(t.getMilliseconds())}`
 }
-
-
-// document.addEventListener('click', (e) => {
-//     const clickEvent = {
-//         x_cor: e.clientX,
-//         y_cor: e.clientY,
-//         event: 'click',//e.button,
-//         event_time: getEventTime()
-//     }
-//     mouseEvents.push(clickEvent);
-// });
-
-// document.addEventListener('contextmenu', (e) => {
-//     e.preventDefault();
-// });
-
-
-// document.addEventListener('click', (e) => {
-//     alert(`Clicked! Context Menu opened: ${isContextMenuOpened}`)
-//     if (isContextMenuOpened) {
-//         const clickEvent = {
-//             x_cor: e.clientX,
-//             y_cor: e.clientY,
-//             event: 'RIGHT_UP',//e.button,
-//             event_time: getEventTime()
-//         }
-//         mouseEvents.push(clickEvent);
-//         isContextMenuOpened = false;
-//     }
-// });
-
-
-

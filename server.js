@@ -29,13 +29,10 @@ sendDataToAPI = function() {
     };
     request(options)
         .then(response => {
-            console.log(`API Received data successfully with code: ${response.statusCode}`);
-            // if (response.statusCode === 201) {
-            //
-            // }
+            console.log(`API Received data successfully with response: ${response}`);
         })
         .catch(err => {
-            console.log(`An error has occurred with code: ${err.statusCode}`);
+            console.error(`An error has occurred: ${err}`);
         });
 }
 
