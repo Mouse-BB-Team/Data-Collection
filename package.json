@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "jquery": "^3.5.0",
     "moment": "^2.25.1",
+    "request": "^2.88.2",
     "request-promise": "^4.2.5"
   },
   "devDependencies": {

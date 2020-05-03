@@ -10,15 +10,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let collectedEventData = [];
 
-const DOMAIN = "mouse-bb-api";
+// const DOMAIN = "mouse-bb-api";
+const MOCK_API_DOMAIN = "mouse-bb-api-mock";
+const DATA_ENDPOINT = "post-data"
 
 sendDataToAPI = function() {
+    console.log("Sending POST to API");
     const dataToSend = collectedEventData;
     collectedEventData = [];
     const options = {
         method: 'POST',
-        uri: "localhost:8080/session/add",
-        // uri: 'https://' + DOMAIN + ".herokuapp.com",
+        // uri: "https://mouse-bb-api-mock.herokuapp.com/post-data",    //Działa
+        uri: 'https://' + MOCK_API_DOMAIN + ".herokuapp.com/" + DATA_ENDPOINT,
         body: {
             sessions: dataToSend
         },
@@ -26,13 +29,13 @@ sendDataToAPI = function() {
     };
     request(options)
         .then(response => {
-            console.log(response.status);
-            // if (response.status === 201) {
+            console.log(`API Received data successfully with code: ${response.statusCode}`);
+            // if (response.statusCode === 201) {
             //
             // }
         })
         .catch(err => {
-            console.log(`An error has occured ${err}`);
+            console.log(`An error has occurred with code: ${err.statusCode}`);
         });
 }
 
@@ -49,7 +52,7 @@ app.post('/api/store-data', (req, res) => {
         collectedEventData.push(userEvent);
     }
     console.log(`Got Post no ${collectedEventData.length}`);
-    // setTimeout(sendDataToAPI, 10000);
+    setTimeout(sendDataToAPI, 10000);
     res.status(201).end();
 });
 
