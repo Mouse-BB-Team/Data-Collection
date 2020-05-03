@@ -16,11 +16,12 @@ app.post('/api/store-data', (req, res) => {
             x_cor: singleEvent.x_cor,
             y_cor: singleEvent.y_cor,
             event: singleEvent.event,
-            time: singleEvent.time
+            event_time: singleEvent.event_time
         }
         collectedEventData.push(userEvent);
+        // console.log(singleEvent);
     }
-    console.log(`Got Post no ${collectedEventData}`)
+    console.log(`Got Post no ${collectedEventData.length}`);
     res.status(201).end();
 });
 
