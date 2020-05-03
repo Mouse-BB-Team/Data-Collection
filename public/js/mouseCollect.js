@@ -1,10 +1,12 @@
-const dataSendTimeout = 1000;   //send data every dataSendTimeout*1[ms]
+const dataSendTimeout = 5000;   //send data every dataSendTimeout*1[ms]
 let mouseEvents = [];
 let lastButtonState = 0;
 let lastScrollState = document.scrollY;
 
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 document.addEventListener('mousedown', (e) => {
-    function getMouseButtonEvent(buttons) {
+    const getMouseButtonEvent = (buttons) => {
         switch (buttons) {
             case 0:
                 return "UNDEFINED";
@@ -18,7 +20,6 @@ document.addEventListener('mousedown', (e) => {
                 return "SCROLL_PUSH";
         }
     }
-
     lastButtonState = e.buttons;
     const singleMouseEvent = {
         x_cor: e.clientX,
@@ -30,7 +31,7 @@ document.addEventListener('mousedown', (e) => {
 });
 
 document.addEventListener('mouseup', (e) => {
-    function getMouseButtonEvent() {
+    const getMouseButtonEvent = () => {
         switch (lastButtonState) {
             case 0:
                 return "UNDEFINED";
@@ -78,20 +79,19 @@ document.addEventListener('mousemove', (e) => {
 
 
 function sendData() {
-    const dataToSend = mouseEvents;
-    mouseEvents = [];
+    if (mouseEvents.length !== 0) {
+        const dataToSend = mouseEvents;
+        mouseEvents = [];
 
-    jQuery.ajax({
-        url: '/api/store-data',
-        type: 'post',
-        data: {
-            mouseEvents: JSON.stringify(dataToSend)
-        },
-        success: () => {
-            setTimeout(sendData, dataSendTimeout);
-        }
-
-    });
+        jQuery.ajax({
+            url: '/api/store-data',
+            type: 'post',
+            data: {
+                mouseEvents: JSON.stringify(dataToSend)
+            }
+        });
+    }
+    wait(dataSendTimeout).then(sendData);
 }
 
 sendData();

@@ -8,32 +8,41 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 let collectedEventData = [];
 
 // const DOMAIN = "mouse-bb-api";
-const MOCK_API_DOMAIN = "mouse-bb-api-mock";
+// const MOCK_API_DOMAIN = "mouse-bb-api-mock";
+const LOCALHOST = "localhost:9091";
 const DATA_ENDPOINT = "post-data"
 
 sendDataToAPI = function() {
-    console.log("Sending POST to API");
-    const dataToSend = collectedEventData;
-    collectedEventData = [];
-    const options = {
-        method: 'POST',
-        // uri: "https://mouse-bb-api-mock.herokuapp.com/post-data",    //Działa
-        uri: 'https://' + MOCK_API_DOMAIN + ".herokuapp.com/" + DATA_ENDPOINT,
-        body: {
-            sessions: dataToSend
-        },
-        json: true
-    };
-    request(options)
-        .then(response => {
-            console.log(`API Received data successfully with response: ${response}`);
-        })
-        .catch(err => {
-            console.error(`An error has occurred: ${err}`);
-        });
+    if (collectedEventData.length !== 0) {
+        console.log("Sending POST to API");
+        const dataToSend = collectedEventData;
+        collectedEventData = [];
+        const options = {
+            method: 'POST',
+            // uri: "https://mouse-bb-api-mock.herokuapp.com/post-data",    //Działa
+            // uri: 'http://' + MOCK_API_DOMAIN + ".herokuapp.com/" + DATA_ENDPOINT,
+            uri: 'http://' + LOCALHOST + '/' + DATA_ENDPOINT,
+            body: {
+                sessions: dataToSend
+            },
+            json: true
+        };
+        request(options)
+            .then(response => {
+                console.log(`API Received data successfully with response: ${response.status}`);
+            })
+            .catch(err => {
+                console.error(`An error has occurred: ${err}`);
+            });
+    }
+    const sec = 10;
+    wait(sec * 1000).then(sendDataToAPI);
+    console.log(`waiting ${sec} sec`);
 }
 
 
@@ -49,7 +58,6 @@ app.post('/api/store-data', (req, res) => {
         collectedEventData.push(userEvent);
     }
     console.log(`Got Post no ${collectedEventData.length}`);
-    setTimeout(sendDataToAPI, 10000);
     res.status(201).end();
 });
 
@@ -66,3 +74,5 @@ app.post('/login', (req, res) => {
 const PORT = process.env.PORT || 9090;
 
 server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+sendDataToAPI();
