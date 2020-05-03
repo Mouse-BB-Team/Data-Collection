@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const request = require('request-promise');
 
 const app = express();
 
@@ -7,7 +8,34 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const collectedEventData = [];
+let collectedEventData = [];
+
+const DOMAIN = "mouse-bb-api";
+
+sendDataToAPI = function() {
+    const dataToSend = collectedEventData;
+    collectedEventData = [];
+    const options = {
+        method: 'POST',
+        uri: "localhost:8080/session/add",
+        // uri: 'https://' + DOMAIN + ".herokuapp.com",
+        body: {
+            sessions: dataToSend
+        },
+        json: true
+    };
+    request(options)
+        .then(response => {
+            console.log(response.status);
+            // if (response.status === 201) {
+            //
+            // }
+        })
+        .catch(err => {
+            console.log(`An error has occured ${err}`);
+        });
+}
+
 
 app.post('/api/store-data', (req, res) => {
     const eventsList = JSON.parse(req.body.mouseEvents);
@@ -19,9 +47,9 @@ app.post('/api/store-data', (req, res) => {
             event_time: singleEvent.event_time
         }
         collectedEventData.push(userEvent);
-        // console.log(singleEvent);
     }
     console.log(`Got Post no ${collectedEventData.length}`);
+    // setTimeout(sendDataToAPI, 10000);
     res.status(201).end();
 });
 
@@ -30,6 +58,11 @@ app.get('/api/get-data', (req, res) => {
     res.end(JSON.stringify(collectedEventData));
 });
 
-const PORT = process.env.PORT || 8080;
+
+app.post('/login', (req, res) => {
+    res.end();
+});
+
+const PORT = process.env.PORT || 9090;
 
 server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
