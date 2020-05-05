@@ -2,4 +2,10 @@ FROM openjdk:8u242-jre
 VOLUME /tmp
 COPY target/data*.jar dc_api.jar
 EXPOSE 8080
+ENV SPRING_PROFILES_ACTIVE=admin
+ENV SPRING_DATASOURCE_URL=jdbc:postgresql://path/db_name
+ENV SPRING_DATASOURCE_USERNAME=admin
+ENV SPRING_DATASOURCE_PASSWORD=admin
+ENV DEFAULT_ADMIN_USERNAME=admin
+ENV DEFAULT_ADMIN_PASSWORD=admin
 ENTRYPOINT ["java", "-jar", "dc_api.jar"]

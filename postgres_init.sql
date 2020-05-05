@@ -1,6 +1,4 @@
-create database data_collection;
-
-\connect data_collection;
+\c
 
 create schema dc;
 
