@@ -29,3 +29,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Do not update Dockerfile --> change only locally ###
+Dockerfile
