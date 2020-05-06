@@ -1,5 +1,6 @@
 package pl.edu.agh.data_collection.config;
 
+import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +38,7 @@ class SecurityConfigUserMode extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(ContextPath.USER_MAIN_PATH + ContextPath.USER_CREATE_PATH).permitAll()
+                .antMatchers(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

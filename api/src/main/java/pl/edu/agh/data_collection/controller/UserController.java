@@ -53,4 +53,22 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
+
+    @PostMapping(ContextPath.USER_CHECK_CREDENTIALS_PATH)
+    public ResponseEntity<Object> checkUserCredentials(@Valid @RequestBody UserDto userDto, Errors errors) throws BadCredentialsException {
+        if(errors.hasErrors())
+            throw new BadCredentialsException(BAD_LOGIN_OR_PASSWORD);
+
+        Optional<UserEntity> foundUserOptional = userRepository.findByLogin(userDto.getLogin());
+
+        if(!foundUserOptional.isPresent())
+            throw new BadCredentialsException(BAD_LOGIN_OR_PASSWORD);
+
+        boolean isValidPassword = foundUserOptional.map(userEntity -> passwordEncoder.matches(userDto.getPassword(), userEntity.getPassword())).orElse(false);
+
+        if(!isValidPassword)
+            throw new BadCredentialsException(BAD_LOGIN_OR_PASSWORD);
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 }

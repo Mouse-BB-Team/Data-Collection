@@ -8,7 +8,10 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -36,8 +39,15 @@ class UserControllerTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    @MockBean
-    private PasswordEncoder encoder;
+    private final String PROPER_LOGIN = "administrator";
+    private final String PROPER_PASSWORD = "password";
+    private final String TOO_SHORT_LOGIN = "admin";
+    private final String TOO_SHORT_PASSWORD = "pass";
+    private final String TOO_LONG_LOGIN = generateToLongString();
+    private final String TOO_LONG_PASSWORD = generateToLongString();
+
+    @SpyBean
+    private BCryptPasswordEncoder encoder;
     @MockBean
     private UserRepository userRepository;
     @Autowired
@@ -47,8 +57,8 @@ class UserControllerTest {
     private ArgumentCaptor<UserEntity> userCaptor;
 
     @Test
-    void validateLoginMinLengthTest() throws Exception {
-        UserDto request = new UserDto("admin", "password");
+    void validateLoginMinLengthCreateUserEndpointTest() throws Exception {
+        UserDto request = new UserDto(TOO_SHORT_LOGIN, PROPER_PASSWORD);
 
         byte[] content = MAPPER.writeValueAsBytes(request);
         String response = BAD_LOGIN_OR_PASSWORD.toString();
@@ -58,8 +68,8 @@ class UserControllerTest {
     }
 
     @Test
-    void validateLoginMaxLengthTest() throws Exception {
-        UserDto request = new UserDto(generateToLongString(), "password");
+    void validateLoginMaxLengthCreateUserEndpointTest() throws Exception {
+        UserDto request = new UserDto(TOO_LONG_LOGIN, PROPER_PASSWORD);
 
         byte[] content = MAPPER.writeValueAsBytes(request);
         String response = BAD_LOGIN_OR_PASSWORD.toString();
@@ -69,8 +79,8 @@ class UserControllerTest {
     }
 
     @Test
-    void validatePasswordMinLengthTest() throws Exception {
-        UserDto request = new UserDto("administrator", "pass");
+    void validatePasswordMinLengthCreateUserEndpointTest() throws Exception {
+        UserDto request = new UserDto(PROPER_LOGIN, TOO_SHORT_PASSWORD);
 
         byte[] content = MAPPER.writeValueAsBytes(request);
         String response = BAD_LOGIN_OR_PASSWORD.toString();
@@ -80,8 +90,8 @@ class UserControllerTest {
     }
 
     @Test
-    void validatePasswordMaxLengthTest() throws Exception {
-        UserDto request = new UserDto("administrator", generateToLongString());
+    void validatePasswordMaxLengthCreateUserEndpointTest() throws Exception {
+        UserDto request = new UserDto(PROPER_LOGIN, TOO_LONG_PASSWORD);
 
         byte[] content = MAPPER.writeValueAsBytes(request);
         String response = BAD_LOGIN_OR_PASSWORD.toString();
@@ -91,8 +101,8 @@ class UserControllerTest {
     }
 
     @Test
-    void checkIfUserAlreadyExistsTest() throws Exception {
-        UserDto request = new UserDto("administrator", "password");
+    void checkIfUserAlreadyExistsCreateUserEndpointTest() throws Exception {
+        UserDto request = new UserDto(PROPER_LOGIN, PROPER_PASSWORD);
         byte[] content = MAPPER.writeValueAsBytes(request);
         String response = USER_ALREADY_EXISTS.toString();
 
@@ -103,7 +113,7 @@ class UserControllerTest {
     }
 
     @Test
-    void saveProperlyUserToDatabaseTest() throws Exception {
+    void saveProperlyUserToDatabaseCreateUserEndpointTest() throws Exception {
         String login = "administrator";
         String password = "password";
 
@@ -123,6 +133,79 @@ class UserControllerTest {
         verify(userRepository).save(userCaptor.capture());
 
         assertEquals(expectedSavedUser, userCaptor.getValue());
+    }
+
+    @Test
+    void validateLoginMinLengthCheckUserCredentialsEndpointTest() throws Exception {
+        UserDto request = new UserDto(TOO_SHORT_LOGIN, PROPER_PASSWORD);
+
+        byte[] content = MAPPER.writeValueAsBytes(request);
+        String response = BAD_LOGIN_OR_PASSWORD.toString();
+
+        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isBadRequest()).andExpect(content().string(response));
+    }
+
+    @Test
+    void validateLoginMaxLengthCheckUserCredentialsEndpointTest() throws Exception {
+        UserDto request = new UserDto(TOO_LONG_LOGIN, PROPER_PASSWORD);
+
+        byte[] content = MAPPER.writeValueAsBytes(request);
+        String response = BAD_LOGIN_OR_PASSWORD.toString();
+
+        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isBadRequest()).andExpect(content().string(response));
+    }
+
+    @Test
+    void validatePasswordMinLengthCheckUserCredentialsEndpointTest() throws Exception {
+        UserDto request = new UserDto(PROPER_LOGIN, TOO_SHORT_PASSWORD);
+
+        byte[] content = MAPPER.writeValueAsBytes(request);
+        String response = BAD_LOGIN_OR_PASSWORD.toString();
+
+        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isBadRequest()).andExpect(content().string(response));
+    }
+
+    @Test
+    void checkIfUserLoginExistsCheckUserCredentialsEndpointTest() throws Exception {
+        UserDto request = new UserDto(PROPER_LOGIN, PROPER_PASSWORD);
+        byte[] content = MAPPER.writeValueAsBytes(request);
+        String response = BAD_LOGIN_OR_PASSWORD.toString();
+
+        when(userRepository.findByLogin(anyString())).thenReturn(Optional.empty());
+
+        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isBadRequest()).andExpect(content().string(response));
+    }
+
+    @Test
+    void checkIfUserPasswordIsProperCheckUserCredentialsEndpointTest() throws Exception {
+        UserDto request = new UserDto(PROPER_LOGIN, PROPER_PASSWORD);
+        byte[] content = MAPPER.writeValueAsBytes(request);
+        String response = BAD_LOGIN_OR_PASSWORD.toString();
+
+        UserEntity userFromRepository = new UserEntity(1L, PROPER_LOGIN, encoder.encode(PROPER_PASSWORD), UserRole.USER);
+
+        when(userRepository.findByLogin(anyString())).thenReturn(Optional.of(userFromRepository));
+        when(encoder.matches(anyString(), anyString())).thenReturn(false);
+
+        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isBadRequest()).andExpect(content().string(response));
+    }
+
+    @Test
+    void checkProperlyUserCredentialsCheckUserCredentialsEndpointTest() throws Exception {
+        UserDto request = new UserDto(PROPER_LOGIN, PROPER_PASSWORD);
+        byte[] content = MAPPER.writeValueAsBytes(request);
+
+        UserEntity userFromRepository = new UserEntity(1L, PROPER_LOGIN, encoder.encode(PROPER_PASSWORD), UserRole.USER);
+
+        when(userRepository.findByLogin(anyString())).thenReturn(Optional.of(userFromRepository));
+
+        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
+                .andExpect(status().isOk());
     }
 
     private String generateToLongString(){

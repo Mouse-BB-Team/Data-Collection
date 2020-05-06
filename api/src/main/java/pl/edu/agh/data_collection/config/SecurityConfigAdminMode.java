@@ -37,6 +37,7 @@ public class SecurityConfigAdminMode extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(ContextPath.USER_MAIN_PATH + ContextPath.USER_CREATE_PATH).hasRole("ADMIN")
+                .antMatchers(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
