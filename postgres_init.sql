@@ -24,6 +24,8 @@ create table dc.sessions
     y_coordinate integer check ( y_coordinate >= 0 ),
     event_id integer,
     event_time timestamp not null,
+    x_resolution integer not null check ( x_resolution >= 0),
+    y_resolution integer not null check ( y_resolution >= 0),
 
     foreign key (user_id) references dc.users(id),
     foreign key (event_id) references dc.events(id)
