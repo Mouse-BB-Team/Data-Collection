@@ -1,5 +1,6 @@
 package pl.edu.agh.data_collection.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,6 +115,32 @@ class SessionControllerTest {
     }
 
     @Test
+    void validateMinXResolutionTest() throws Exception {
+        SessionDtoBuilder builder = new WrongXResolutionSessionDtoBuilder();
+        SessionDto sessionDto = builder.buildAndGet();
+
+        byte[] content = MAPPER.writeValueAsBytes(sessionDto);
+
+        mockMvc.perform(post(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON).content(content)
+                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void validateMinYResolutionTest() throws Exception {
+        SessionDtoBuilder builder = new WrongYResolutionSessionDtoBuilder();
+        SessionDto sessionDto = builder.buildAndGet();
+
+        byte[] content = MAPPER.writeValueAsBytes(sessionDto);
+
+        mockMvc.perform(post(CONTEXT_PATH)
+                .contentType(MediaType.APPLICATION_JSON).content(content)
+                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void validateProperEventTest() throws Exception{
         SessionDtoBuilder builder = new WrongEventSessionDtoBuilder();
         SessionDto sessionDto = builder.buildAndGet();
@@ -160,6 +187,10 @@ class SessionControllerTest {
 
         sessionEntity.setEventTime(timestampParser.parse(element.getTime()));
 
+        sessionEntity.setXResolution(element.getX_res());
+        sessionEntity.setYResolution(element.getY_res());
+
+
         return sessionEntity;
     }
 
@@ -181,8 +212,8 @@ class SessionControllerTest {
 
         @Override
         protected void addElement() {
-            elements.add(new SessionDto.SessionElement(2,3, EVENT_CLICK, TIMESTAMP));
-            elements.add(new SessionDto.SessionElement(12, 3242, EVENT_MOVE, TIMESTAMP));
+            elements.add(new SessionDto.SessionElement(2,3, EVENT_CLICK, TIMESTAMP,12,1313));
+            elements.add(new SessionDto.SessionElement(12, 3242, EVENT_MOVE, TIMESTAMP, 3212,2323));
         }
     }
 
@@ -190,7 +221,7 @@ class SessionControllerTest {
 
         @Override
         protected void addElement() {
-            elements.add(new SessionDto.SessionElement(-5, 3, EVENT_CLICK, TIMESTAMP));
+            elements.add(new SessionDto.SessionElement(-5, 3, EVENT_CLICK, TIMESTAMP,3213,321));
         }
     }
 
@@ -198,7 +229,7 @@ class SessionControllerTest {
 
         @Override
         protected void addElement() {
-            elements.add(new SessionDto.SessionElement(5, -3, EVENT_CLICK, TIMESTAMP));
+            elements.add(new SessionDto.SessionElement(5, -3, EVENT_CLICK, TIMESTAMP,312,321));
         }
     }
 
@@ -206,7 +237,23 @@ class SessionControllerTest {
 
         @Override
         protected void addElement() {
-            elements.add(new SessionDto.SessionElement(5, 3, WRONG_EVENT, TIMESTAMP));
+            elements.add(new SessionDto.SessionElement(5, 3, WRONG_EVENT, TIMESTAMP,222,332));
+        }
+    }
+
+    private static class WrongXResolutionSessionDtoBuilder extends SessionDtoBuilder{
+
+        @Override
+        protected void addElement() {
+            elements.add(new SessionDto.SessionElement(5, 3, EVENT_CLICK, TIMESTAMP, -2, 0));
+        }
+    }
+
+    private static class WrongYResolutionSessionDtoBuilder extends SessionDtoBuilder{
+
+        @Override
+        protected void addElement() {
+            elements.add(new SessionDto.SessionElement(5, 3, EVENT_CLICK, TIMESTAMP, 0, -3));
         }
     }
 }

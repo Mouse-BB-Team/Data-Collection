@@ -77,6 +77,9 @@ public class SessionController {
 
         sessionEntity.setEventTime(timestampParser.parse(element.getTime()));
 
+        sessionEntity.setXResolution(element.getX_res());
+        sessionEntity.setYResolution(element.getY_res());
+
         return sessionEntity;
     }
 }

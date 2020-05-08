@@ -21,4 +21,8 @@ public class SessionEntity {
     private Long event;
     @Column(name = "event_time")
     private LocalDateTime eventTime;
+    @Column(name = "x_resolution")
+    private Integer xResolution;
+    @Column(name = "y_resolution")
+    private Integer yResolution;
 }

@@ -30,5 +30,9 @@ public class SessionDto {
         private String event;
         @ProperTimestamp
         private String time;
+        @Min(value = 0)
+        private Integer x_res;
+        @Min(value = 0)
+        private Integer y_res;
     }
 }
