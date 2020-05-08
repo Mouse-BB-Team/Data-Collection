@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.edu.agh.data_collection.persistence.entity.UserEntity;
 import pl.edu.agh.data_collection.persistence.repository.UserRepository;
@@ -32,6 +33,7 @@ public class StartupConfig {
         this.repository = repository;
     }
 
+    @Profile({ProfileType.ONLY_ADMIN_CREATES_USERS, ProfileType.USERS_CREATE_THEMSELVES})
     @Bean
     CommandLineRunner init(){
         return args -> {

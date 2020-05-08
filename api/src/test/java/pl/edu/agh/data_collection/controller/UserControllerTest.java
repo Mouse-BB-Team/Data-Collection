@@ -116,14 +116,10 @@ class UserControllerTest {
     void saveProperlyUserToDatabaseCreateUserEndpointTest() throws Exception {
         String login = "administrator";
         String password = "password";
+        String role = UserRole.USER;
 
         UserDto request = new UserDto(login, password);
         byte[] content = MAPPER.writeValueAsBytes(request);
-
-        UserEntity expectedSavedUser = new UserEntity();
-        expectedSavedUser.setLogin(login);
-        expectedSavedUser.setPassword(encoder.encode(password));
-        expectedSavedUser.setAuthority(UserRole.USER);
 
         when(userRepository.findByLogin(anyString())).thenReturn(Optional.empty());
 
@@ -132,7 +128,9 @@ class UserControllerTest {
 
         verify(userRepository).save(userCaptor.capture());
 
-        assertEquals(expectedSavedUser, userCaptor.getValue());
+        assertEquals(login, userCaptor.getValue().getLogin());
+        assertTrue(encoder.matches(password, userCaptor.getValue().getPassword()));
+        assertEquals(role, userCaptor.getValue().getAuthority());
     }
 
     @Test
