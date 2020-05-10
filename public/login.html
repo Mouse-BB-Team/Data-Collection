@@ -213,24 +213,16 @@
                         <h2>Login</h2>
                         <form action="#">
                             <div class="group-input">
-                                <label for="username">Username or email address *</label>
+                                <label for="username">Username *</label>
                                 <input type="text" id="username">
                             </div>
                             <div class="group-input">
                                 <label for="pass">Password *</label>
-                                <input type="text" id="pass">
+                                <input type="password" id="pass">
                             </div>
                             <div class="group-input gi-check">
-                                <div class="gi-more">
-                                    <label for="save-pass">
-                                        Save Password
-                                        <input type="checkbox" id="save-pass">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                    <a href="#" class="forget-pass">Forget your Password</a>
-                                </div>
                             </div>
-                            <button type="submit" class="site-btn login-btn">Sign In</button>
+                            <button id="log-button" type="submit" class="site-btn login-btn">Sign In</button>
                         </form>
                         <div class="switch-login">
                             <a href="register.html" class="or-login">Or Create An Account</a>
@@ -363,6 +355,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/mouseCollect.js"></script>
+    <script src="js/simpleLogin.js"></script>>
+    <script src="js/eventTime.js"></script>
 </body>
 
 </html>

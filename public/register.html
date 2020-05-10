@@ -211,20 +211,21 @@
                 <div class="col-lg-6 offset-lg-3">
                     <div class="register-form">
                         <h2>Register</h2>
-                        <form action="#">
+<!--                        <form action="http://localhost:9090/register" method="post">-->
+                        <form>
                             <div class="group-input">
-                                <label for="username">Username or email address *</label>
+                                <label for="username">Username *</label>
                                 <input type="text" id="username">
                             </div>
                             <div class="group-input">
                                 <label for="pass">Password *</label>
-                                <input type="text" id="pass">
+                                <input type="password" id="pass">
                             </div>
                             <div class="group-input">
                                 <label for="con-pass">Confirm Password *</label>
-                                <input type="text" id="con-pass">
+                                <input type="password" id="con-pass">
                             </div>
-                            <button type="submit" class="site-btn register-btn">REGISTER</button>
+                            <button id="reg-button" type="submit" class="site-btn register-btn">REGISTER</button>
                         </form>
                         <div class="switch-login">
                             <a href="login.html" class="or-login">Or Login</a>
@@ -357,6 +358,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/mouseCollect.js"></script>
+    <script src="js/simpleRegister.js"></script>
+    <script src="js/eventTime.js"></script>
 </body>
 
 </html>
