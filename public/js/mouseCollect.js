@@ -26,7 +26,8 @@ document.addEventListener('mousedown', (e) => {
         y_cor: e.clientY,
         event: getMouseButtonEvent(lastButtonState),
         event_time: getEventTime(),
-        resolution: `${window.screen.width}x${window.screen.height}`
+        x_res: window.screen.width,
+        y_res: window.screen.height
     }
     mouseEvents.push(singleMouseEvent);
 });
@@ -53,7 +54,8 @@ document.addEventListener('mouseup', (e) => {
         y_cor: e.clientY,
         event: getMouseButtonEvent(),
         event_time: getEventTime(),
-        resolution: `${window.screen.width}x${window.screen.height}`
+        x_res: window.screen.width,
+        y_res: window.screen.height
     }
     mouseEvents.push(clickEvent);
 });
@@ -64,7 +66,8 @@ document.addEventListener('wheel', e => {
         y_cor: e.clientY,
         event: lastScrollState > this.scrollY ? "SCROLL_UP" : "SCROLL_DOWN",
         event_time: getEventTime(),
-        resolution: `${window.screen.width}x${window.screen.height}`
+        x_res: window.screen.width,
+        y_res: window.screen.height
     }
     mouseEvents.push(singleScrollEvent);
     lastScrollState = this.scrollY;
@@ -76,7 +79,8 @@ document.addEventListener('mousemove', (e) => {
         y_cor: e.clientY,
         event: 'MOVE',
         event_time: getEventTime(),
-        resolution: `${window.screen.width}x${window.screen.height}`
+        x_res: window.screen.width,
+        y_res: window.screen.height
     }
     mouseEvents.push(clickEvent);
 });

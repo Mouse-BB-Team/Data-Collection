@@ -13,7 +13,8 @@ router.post('/api/store-data', (req, res) => {
             y_cor: singleEvent.y_cor,
             event: singleEvent.event,
             time: singleEvent.event_time,
-            resolution: singleEvent.resolution
+            x_res: singleEvent.x_res,
+            y_res: singleEvent.y_res
         }
         collectedEventData.push(userEvent);
     }
