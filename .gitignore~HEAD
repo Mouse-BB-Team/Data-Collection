@@ -1,0 +1,7 @@
+.idea/
+node_modules
+*.iml
+jsLibraryMappings.xml
+vcs.xml
+logs/
+.env
