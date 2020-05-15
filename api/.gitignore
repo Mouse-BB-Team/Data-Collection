@@ -32,3 +32,6 @@ build/
 
 ### Do not update Dockerfile --> change only locally ###
 Dockerfile
+
+### Ignore log files ###
+log*
