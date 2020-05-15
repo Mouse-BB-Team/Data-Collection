@@ -1,6 +1,7 @@
 package pl.edu.agh.data_collection.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,12 @@ import pl.edu.agh.data_collection.persistence.entity.SessionEntity;
 import pl.edu.agh.data_collection.persistence.repository.EventRepository;
 import pl.edu.agh.data_collection.persistence.repository.SessionRepository;
 import pl.edu.agh.data_collection.persistence.repository.UserRepository;
-import pl.edu.agh.data_collection.utils.AuthorizationHeaderValueParser;
-import pl.edu.agh.data_collection.utils.LoginParser;
+import pl.edu.agh.data_collection.utils.Parser;
 import pl.edu.agh.data_collection.utils.TimestampParser;
+import pl.edu.agh.data_collection.utils.UsernameParser;
 
 import javax.validation.Valid;
-import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -29,21 +30,19 @@ public class SessionController {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final TimestampParser timestampParser;
-    private final LoginParser loginParser;
-    private final AuthorizationHeaderValueParser authorizationHeaderParser;
+    private final UsernameParser bearerParser;
 
     @Autowired
-    public SessionController(SessionRepository sessionRepository, EventRepository eventRepository, UserRepository userRepository, TimestampParser timestampParser, LoginParser loginParser, AuthorizationHeaderValueParser authorizationHeaderParser) {
+    public SessionController(SessionRepository sessionRepository, EventRepository eventRepository, UserRepository userRepository, TimestampParser timestampParser, UsernameParser bearerParser) {
         this.sessionRepository = sessionRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.timestampParser = timestampParser;
-        this.loginParser = loginParser;
-        this.authorizationHeaderParser = authorizationHeaderParser;
+        this.bearerParser = bearerParser;
     }
 
     @PostMapping(ContextPath.SESSION_ADD_ELEMENT_PATH)
-    public ResponseEntity<Object> addSessionElement(@Valid @RequestBody SessionDto sessionDto, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String header) throws ParseException {
+    public ResponseEntity<Object> addSessionElement(@Valid @RequestBody SessionDto sessionDto, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String header) {
         List<SessionEntity> sessions = new LinkedList<>();
 
         Long userId = getUserIdFromHeader(header);
@@ -58,9 +57,8 @@ public class SessionController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    private Long getUserIdFromHeader(String header) throws ParseException {
-        String headerValue = authorizationHeaderParser.parse(header);
-        String login = loginParser.parse(headerValue);
+    private Long getUserIdFromHeader(String header) {
+        String login = bearerParser.parse(header);
         Optional<Long> optionalId = userRepository.getIdByLogin(login);
         return optionalId.orElseThrow(() -> new UsernameNotFoundException(login + "not found!"));
     }

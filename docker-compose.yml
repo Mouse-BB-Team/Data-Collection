@@ -28,6 +28,12 @@ services:
                         - "SPRING_DATASOURCE_PASSWORD=admin"
                         - "DEFAULT_ADMIN_USERNAME=admin"
                         - "DEFAULT_ADMIN_PASSWORD=admin"
+                        - "OAUTH2_CLIENTID=client_id"
+                        - "OAUTH2_CLIENTSECRET=password"
+                        - "OAUTH2_RSAPUBLICKEY=ssh-rsa format"
+                        - "OAUTH2_RSAPRIVATEKEY=ssh-rsa format"
+                        - "OAUTH2_TOKENEXPIREDTIME=200"
+                        - "OAUTH2_REFRESHTOKENEXPIREDTIME=220"
                 networks:
                         dc_network:
                 depends_on:

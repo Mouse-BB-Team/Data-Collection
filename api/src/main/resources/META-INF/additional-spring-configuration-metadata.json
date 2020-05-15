@@ -14,5 +14,35 @@
       "name": "default.time.format",
       "type": "java.lang.String",
       "description": "Default time format."
+    },
+    {
+      "name": "oauth2.clientId",
+      "type": "java.lang.String",
+      "description": "Application client id provides access to OAuth2 server."
+    },
+    {
+      "name": "oauth2.clientSecret",
+      "type": "java.lang.String",
+      "description": "Application secret provides access to OAuth2 server."
+    },
+    {
+      "name": "oauth2.tokenExpiredTime",
+      "type": "java.lang.String",
+      "description": "Time to expire JWT token."
+    },
+    {
+      "name": "oauth2.refreshTokenExpiredTime",
+      "type": "java.lang.String",
+      "description": "Time to expire JWT refresh token."
+    },
+    {
+      "name": "oauth2.RSAPublicKey",
+      "type": "java.lang.String",
+      "description": "RSA public key used to resolve token."
+    },
+    {
+      "name": "oauth2.RSAPrivateKey",
+      "type": "java.lang.String",
+      "description": "RSA private key used to sign token."
     }
   ] }

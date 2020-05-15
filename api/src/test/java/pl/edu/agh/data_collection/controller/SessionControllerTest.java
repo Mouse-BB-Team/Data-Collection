@@ -1,6 +1,5 @@
 package pl.edu.agh.data_collection.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,9 +25,9 @@ import pl.edu.agh.data_collection.persistence.entity.SessionEntity;
 import pl.edu.agh.data_collection.persistence.repository.EventRepository;
 import pl.edu.agh.data_collection.persistence.repository.SessionRepository;
 import pl.edu.agh.data_collection.persistence.repository.UserRepository;
-import pl.edu.agh.data_collection.utils.AuthorizationHeaderValueParser;
-import pl.edu.agh.data_collection.utils.LoginParser;
+import pl.edu.agh.data_collection.utils.JwtDecoder;
 import pl.edu.agh.data_collection.utils.TimestampParser;
+import pl.edu.agh.data_collection.utils.UsernameParser;
 
 import java.util.*;
 
@@ -53,11 +52,11 @@ class SessionControllerTest {
     @MockBean
     private EventRepository eventRepository;
     @SpyBean
-    private AuthorizationHeaderValueParser authorizationHeaderParser;
-    @SpyBean
-    private LoginParser loginParser;
-    @SpyBean
     private TimestampParser timestampParser;
+    @SpyBean
+    private UsernameParser usernameParser;
+    @SpyBean
+    private JwtDecoder jwtDecoder;
     @Autowired
     private MockMvc mockMvc;
 
@@ -71,13 +70,16 @@ class SessionControllerTest {
     private static final String USER_LOGIN = "admin";
     private static final String USER_PASSWORD = "admin";
     private static final Long USER_ID = 10L;
-    private static String BASIC_AUTH_HEADER;
+    private static String BEARER_AUTH_HEADER;
     private static String CONTEXT_PATH;
 
     @BeforeAll
     static void setUp(){
         CONTEXT_PATH = ContextPath.SESSION_MAIN_PATH + ContextPath.SESSION_ADD_ELEMENT_PATH;
-        BASIC_AUTH_HEADER = "Basic " + new String(Base64.getEncoder().encode((USER_LOGIN + ":" + USER_PASSWORD).getBytes()));
+        BEARER_AUTH_HEADER = "Bearer " +
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODk1NDExODQsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaXRpZX" +
+                "MiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJaRS9qVGt4SktYNldoSVZ3SGF1U1ZKNFdSTU09IiwiY2xpZW50X2lkIjoiY2xpZW50X2lkI" +
+                "iwic2NvcGUiOlsicmVhZCIsIndyaXRlIl19.AVdnJF9ji3I0eURrov1vLroIn9WKhLtWXvAS85nzJvc";
     }
 
     @BeforeEach
@@ -97,7 +99,7 @@ class SessionControllerTest {
 
         mockMvc.perform(post(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON).content(content)
-                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER))
+                .header(HttpHeaders.AUTHORIZATION, BEARER_AUTH_HEADER))
                 .andExpect(status().isBadRequest());
     }
 
@@ -110,7 +112,7 @@ class SessionControllerTest {
 
         mockMvc.perform(post(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON).content(content)
-                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER))
+                .header(HttpHeaders.AUTHORIZATION, BEARER_AUTH_HEADER))
                 .andExpect(status().isBadRequest());
     }
 
@@ -123,7 +125,7 @@ class SessionControllerTest {
 
         mockMvc.perform(post(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON).content(content)
-                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER))
+                .header(HttpHeaders.AUTHORIZATION, BEARER_AUTH_HEADER))
                 .andExpect(status().isBadRequest());
     }
 
@@ -136,7 +138,7 @@ class SessionControllerTest {
 
         mockMvc.perform(post(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON).content(content)
-                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER))
+                .header(HttpHeaders.AUTHORIZATION, BEARER_AUTH_HEADER))
                 .andExpect(status().isBadRequest());
     }
 
@@ -149,7 +151,7 @@ class SessionControllerTest {
 
         mockMvc.perform(post(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON).content(content)
-                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER))
+                .header(HttpHeaders.AUTHORIZATION, BEARER_AUTH_HEADER))
                 .andExpect(status().isBadRequest());
     }
 
@@ -169,7 +171,7 @@ class SessionControllerTest {
 
         mockMvc.perform(post(CONTEXT_PATH)
                 .contentType(MediaType.APPLICATION_JSON).content(content)
-                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER))
+                .header(HttpHeaders.AUTHORIZATION, BEARER_AUTH_HEADER))
                 .andExpect(status().isOk());
 
         verify(sessionRepository).saveAll(sessionCaptor.capture());

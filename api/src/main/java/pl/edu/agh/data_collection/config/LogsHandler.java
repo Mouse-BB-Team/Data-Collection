@@ -25,7 +25,7 @@ class LogsHandler {
 
     @Around(value = "exceptionWarningPointcut(request)", argNames = "joinPoint, request")
     public Object doExceptionWarningLogs(ProceedingJoinPoint joinPoint, WebRequest request) throws Throwable {
-        ResponseEntity<Object> returnedValue = (ResponseEntity<Object>) joinPoint.proceed();
+        @SuppressWarnings("unchecked") ResponseEntity<Object> returnedValue = (ResponseEntity<Object>) joinPoint.proceed();
 
         String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
         String method = ((ServletWebRequest) request).getRequest().getMethod();

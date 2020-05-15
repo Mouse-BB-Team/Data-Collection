@@ -3,6 +3,7 @@ package pl.edu.agh.data_collection.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Secured(UserRole.ADMIN)
     @PostMapping(ContextPath.USER_CREATE_PATH)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto userDto, Errors errors) throws BadCredentialsException {
         if(errors.hasErrors())
@@ -52,23 +54,5 @@ public class UserController {
         userRepository.save(userToSave);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
-    }
-
-    @PostMapping(ContextPath.USER_CHECK_CREDENTIALS_PATH)
-    public ResponseEntity<Object> checkUserCredentials(@Valid @RequestBody UserDto userDto, Errors errors) throws BadCredentialsException {
-        if(errors.hasErrors())
-            throw new BadCredentialsException(BAD_LOGIN_OR_PASSWORD);
-
-        Optional<UserEntity> foundUserOptional = userRepository.findByLogin(userDto.getLogin());
-
-        if(!foundUserOptional.isPresent())
-            throw new BadCredentialsException(BAD_LOGIN_OR_PASSWORD);
-
-        boolean isValidPassword = foundUserOptional.map(userEntity -> passwordEncoder.matches(userDto.getPassword(), userEntity.getPassword())).orElse(false);
-
-        if(!isValidPassword)
-            throw new BadCredentialsException(BAD_LOGIN_OR_PASSWORD);
-
-        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

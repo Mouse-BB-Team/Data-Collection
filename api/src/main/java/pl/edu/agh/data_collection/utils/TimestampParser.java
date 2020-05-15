@@ -1,16 +1,15 @@
 package pl.edu.agh.data_collection.utils;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Component
-public class TimestampParser{
+public class TimestampParser implements Parser<String, LocalDateTime>{
 
     @Value("${default.time.format}")
     private String timestampFormat;
 
+    @Override
     public LocalDateTime parse(String timestamp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(timestampFormat);
         return LocalDateTime.parse(timestamp, formatter);

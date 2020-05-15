@@ -57,7 +57,7 @@ class UserControllerTest {
     private ArgumentCaptor<UserEntity> userCaptor;
 
     @Test
-    void validateLoginMinLengthCreateUserEndpointTest() throws Exception {
+    void validateLoginMinLengtTest() throws Exception {
         UserDto request = new UserDto(TOO_SHORT_LOGIN, PROPER_PASSWORD);
 
         byte[] content = MAPPER.writeValueAsBytes(request);
@@ -68,7 +68,7 @@ class UserControllerTest {
     }
 
     @Test
-    void validateLoginMaxLengthCreateUserEndpointTest() throws Exception {
+    void validateLoginMaxLengthTest() throws Exception {
         UserDto request = new UserDto(TOO_LONG_LOGIN, PROPER_PASSWORD);
 
         byte[] content = MAPPER.writeValueAsBytes(request);
@@ -79,7 +79,7 @@ class UserControllerTest {
     }
 
     @Test
-    void validatePasswordMinLengthCreateUserEndpointTest() throws Exception {
+    void validatePasswordMinLengthTest() throws Exception {
         UserDto request = new UserDto(PROPER_LOGIN, TOO_SHORT_PASSWORD);
 
         byte[] content = MAPPER.writeValueAsBytes(request);
@@ -90,7 +90,7 @@ class UserControllerTest {
     }
 
     @Test
-    void validatePasswordMaxLengthCreateUserEndpointTest() throws Exception {
+    void validatePasswordMaxLengthTest() throws Exception {
         UserDto request = new UserDto(PROPER_LOGIN, TOO_LONG_PASSWORD);
 
         byte[] content = MAPPER.writeValueAsBytes(request);
@@ -101,7 +101,7 @@ class UserControllerTest {
     }
 
     @Test
-    void checkIfUserAlreadyExistsCreateUserEndpointTest() throws Exception {
+    void checkIfUserAlreadyExistsTest() throws Exception {
         UserDto request = new UserDto(PROPER_LOGIN, PROPER_PASSWORD);
         byte[] content = MAPPER.writeValueAsBytes(request);
         String response = USER_ALREADY_EXISTS.toString();
@@ -113,7 +113,7 @@ class UserControllerTest {
     }
 
     @Test
-    void saveProperlyUserToDatabaseCreateUserEndpointTest() throws Exception {
+    void saveProperlyUserToDatabaseTest() throws Exception {
         String login = "administrator";
         String password = "password";
         String role = UserRole.USER;
@@ -131,79 +131,6 @@ class UserControllerTest {
         assertEquals(login, userCaptor.getValue().getLogin());
         assertTrue(encoder.matches(password, userCaptor.getValue().getPassword()));
         assertEquals(role, userCaptor.getValue().getAuthority());
-    }
-
-    @Test
-    void validateLoginMinLengthCheckUserCredentialsEndpointTest() throws Exception {
-        UserDto request = new UserDto(TOO_SHORT_LOGIN, PROPER_PASSWORD);
-
-        byte[] content = MAPPER.writeValueAsBytes(request);
-        String response = BAD_LOGIN_OR_PASSWORD.toString();
-
-        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
-                .andExpect(status().isBadRequest()).andExpect(content().string(response));
-    }
-
-    @Test
-    void validateLoginMaxLengthCheckUserCredentialsEndpointTest() throws Exception {
-        UserDto request = new UserDto(TOO_LONG_LOGIN, PROPER_PASSWORD);
-
-        byte[] content = MAPPER.writeValueAsBytes(request);
-        String response = BAD_LOGIN_OR_PASSWORD.toString();
-
-        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
-                .andExpect(status().isBadRequest()).andExpect(content().string(response));
-    }
-
-    @Test
-    void validatePasswordMinLengthCheckUserCredentialsEndpointTest() throws Exception {
-        UserDto request = new UserDto(PROPER_LOGIN, TOO_SHORT_PASSWORD);
-
-        byte[] content = MAPPER.writeValueAsBytes(request);
-        String response = BAD_LOGIN_OR_PASSWORD.toString();
-
-        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
-                .andExpect(status().isBadRequest()).andExpect(content().string(response));
-    }
-
-    @Test
-    void checkIfUserLoginExistsCheckUserCredentialsEndpointTest() throws Exception {
-        UserDto request = new UserDto(PROPER_LOGIN, PROPER_PASSWORD);
-        byte[] content = MAPPER.writeValueAsBytes(request);
-        String response = BAD_LOGIN_OR_PASSWORD.toString();
-
-        when(userRepository.findByLogin(anyString())).thenReturn(Optional.empty());
-
-        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
-                .andExpect(status().isBadRequest()).andExpect(content().string(response));
-    }
-
-    @Test
-    void checkIfUserPasswordIsProperCheckUserCredentialsEndpointTest() throws Exception {
-        UserDto request = new UserDto(PROPER_LOGIN, PROPER_PASSWORD);
-        byte[] content = MAPPER.writeValueAsBytes(request);
-        String response = BAD_LOGIN_OR_PASSWORD.toString();
-
-        UserEntity userFromRepository = new UserEntity(1L, PROPER_LOGIN, encoder.encode(PROPER_PASSWORD), UserRole.USER);
-
-        when(userRepository.findByLogin(anyString())).thenReturn(Optional.of(userFromRepository));
-        when(encoder.matches(anyString(), anyString())).thenReturn(false);
-
-        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
-                .andExpect(status().isBadRequest()).andExpect(content().string(response));
-    }
-
-    @Test
-    void checkProperlyUserCredentialsCheckUserCredentialsEndpointTest() throws Exception {
-        UserDto request = new UserDto(PROPER_LOGIN, PROPER_PASSWORD);
-        byte[] content = MAPPER.writeValueAsBytes(request);
-
-        UserEntity userFromRepository = new UserEntity(1L, PROPER_LOGIN, encoder.encode(PROPER_PASSWORD), UserRole.USER);
-
-        when(userRepository.findByLogin(anyString())).thenReturn(Optional.of(userFromRepository));
-
-        mockMvc.perform(post(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).contentType(MediaType.APPLICATION_JSON).content(content))
-                .andExpect(status().isOk());
     }
 
     private String generateToLongString(){

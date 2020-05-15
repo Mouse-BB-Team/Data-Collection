@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @Profile(ProfileType.ONLY_ADMIN_CREATES_USERS)
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfigAdminMode extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceConfig userDetailsServiceConfig;
@@ -33,14 +35,7 @@ public class SecurityConfigAdminMode extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(ContextPath.USER_MAIN_PATH + ContextPath.USER_CREATE_PATH).hasRole("ADMIN")
-                .antMatchers(ContextPath.USER_MAIN_PATH + ContextPath.USER_CHECK_CREDENTIALS_PATH).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
+        http.authorizeRequests().anyRequest().authenticated();
     }
 
     @Bean
