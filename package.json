@@ -2,11 +2,12 @@
   "name": "data_collecting_site",
   "version": "1.0.0",
   "description": "Template html site to run script to collect mouse data",
-  "main": "server.js",
+  "main": "server.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node server.start.js",
+    "dev": "nodemon server.start.js",
+    "test": "jest",
+    "test-watch": "jest --watch"
   },
   "keywords": [],
   "author": "Kamil Kaliś",
@@ -19,7 +20,11 @@
     "request-promise": "^4.2.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3"
+    "@types/jest": "^25.2.2",
+    "jest": "^26.0.1",
+    "mockdate": "^2.0.5",
+    "nodemon": "^2.0.3",
+    "supertest": "^4.0.2"
   },
   "repository": {
     "type": "git",

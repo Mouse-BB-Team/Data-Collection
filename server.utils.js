@@ -1,6 +1,6 @@
 const request = require('request-promise');
 const logger = require('./loggerModule.js');
-let router = require('./routes.js');
+let router = require('./server.routes.js');
 
 let SEC = 5;
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -15,7 +15,7 @@ const sendDataToAPI = () => {
         logger.info("Sending POST to API");
 
         const dataToSend = router.getCollectedData;
-        router.clearCollectedData = 0;
+        router.setCollectedData = [];
 
         const options = {
             method: 'POST',
@@ -32,7 +32,7 @@ const sendDataToAPI = () => {
             json: true
         };
 
-        request(options)
+        request.post(options)
             .then(response => {
                 logger.info(`API Received data successfully with response status code: ${response.statusCode}`);
             })

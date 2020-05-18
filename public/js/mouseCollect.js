@@ -74,7 +74,7 @@ document.addEventListener('wheel', e => {
 });
 
 document.addEventListener('mousemove', (e) => {
-    const clickEvent = {
+    const mouseMoveEvent = {
         x_cor: e.clientX,
         y_cor: e.clientY,
         event: 'MOVE',
@@ -82,11 +82,11 @@ document.addEventListener('mousemove', (e) => {
         x_res: window.screen.width,
         y_res: window.screen.height
     }
-    mouseEvents.push(clickEvent);
+    mouseEvents.push(mouseMoveEvent);
 });
 
 
-function sendData() {
+const sendData = () => {
     if (mouseEvents.length !== 0) {
         const dataToSend = mouseEvents;
         mouseEvents = [];
