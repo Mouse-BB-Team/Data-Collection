@@ -1,36 +1,43 @@
 <!DOCTYPE HTML>
 <html lang="en" >
-<html>
 <head>
-  <title>Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="login_style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
-  <script src="credentials-upload.js" async defer></script>
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="login_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="faq_panel.js" async defer></script>
 </head>
 
 <body class="body">
-<div class="login-page">
-  <div class="form">
+<div class="main-content">
+    <div class="login-page">
+        <div class="form">
+            <form action="http://www.dasdsasas.pl">
+            <label>
+                <input id="login" name="login" type="text" placeholder="&#xf007;  username"/>
+                <input id="password" name="password" type="password" placeholder="&#xf023;  password"/>
+            </label>
+            <button type="submit">LOGIN</button>
+            <p class="message"></p>
+            </form>
 
 
-      <input id="login" type="text" placeholder="&#xf007;  username"/>
-      <input id="password" type="password" placeholder="&#xf023;  password"/>
-      <button onclick="obtainToken()">LOGIN</button>
-      <p class="message"></p>
+            <form class="login-form">
+                <button type="button" onclick="window.location.href='signup.html'">SIGN UP</button>
+            </form>
+        </div>
+    </div>
 
-
-    <form class="login-form">
-      <button type="button">SIGN UP</button>
-    </form>
-  </div>
+    <div class="support-greeting">Thank you for your support!</div>
 </div>
 
+<div class="faq-button"><button>FAQ</button></div>
 
-<div class="support-greeting">Thank you for your support!</div>
+<div class="right-panel"></div>
 
+<div class="cookie-banner"><p>We use cookies to ensure that we give you the best experience on our website.</p></div>
 </body>
 </html>
-

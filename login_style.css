@@ -20,7 +20,7 @@
   padding: 45px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-  
+
 }
 .form input {
   font-family: FontAwesome, "Roboto", sans-serif;
@@ -32,7 +32,7 @@
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
-  
+
 }
 .form button {
   font-family: "Titillium Web", sans-serif;
@@ -58,7 +58,7 @@
 
 
 .form .message {
-  
+
   margin: 6px 6px;
   color: #808080;
   font-size: 11px;
@@ -66,7 +66,7 @@
   font-weight: bold;
   font-style: normal;
 
-  
+
 
 }
 .form .message a {
@@ -115,4 +115,158 @@
   text-align: center;
   font-family: "Roboto", sans-serif;
   font-size: 30px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3%;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  font-family: "Roboto", sans-serif;
+  background: #0f64a3;
+  color: white;
+  margin: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.cookie-banner p {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
+}
+
+.faq-button {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 55px;
+  height: 55px;
+}
+
+.faq-button button {
+  background: #2e89cd;
+  border-width: 0;
+  width: inherit;
+  height: inherit;
+  border-radius: 30px;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  outline: 0;
+  letter-spacing: .1em;
+}
+
+.faq-button button:hover,.form button:active,.form button:focus {
+  background: #095087;
+}
+
+.right-panel {
+  position: fixed;
+  top: 0;
+  right: -30%;
+  /*right: 0;*/
+  width: 30%;
+  height: 100%;
+  background: rgb(85, 149, 212);
+  color: white;
+  overflow: scroll;
+}
+
+.right-panel .close {
+  position: relative;
+  left: 5px;
+  top: 5px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.5;
+  -webkit-transition-duration:0.5s;
+  transition-duration:0.5s;
+  transition: all .3s ease-out;
+  cursor:pointer;
+}
+.right-panel .close:hover {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+.right-panel .close:before, .right-panel .close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.right-panel .close:before {
+  transform: rotate(45deg);
+}
+.right-panel .close:after {
+  transform: rotate(-45deg);
+}
+
+.right-panel .top-text {
+  position: relative;
+  top: 0;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 26px;
+  user-select: none;
+  font-weight: bold;
+}
+
+.right-panel .text {
+  width: 90%;
+  padding-top: 30px;
+  margin: 0 auto;
+  text-align: justify;
+}
+
+.right-panel .point {
+  font-family: "Roboto", sans-serif;
+  font-size: 19px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.right-panel .point .question {
+  background: #333333;
+  padding: 10px;
+  border-radius: 7px;
+  font-weight: bold;
+  user-select: none;
+  cursor:pointer;
+  line-height: 170%;
+}
+
+.right-panel .point .answer {
+  background: #6c6a6a;
+  padding: 10px;
+  border-radius: 7px;
+  font-size: 16px;
+  line-height: 160%;
+}
+
+.right-panel .text .question-list{
+  list-style-type: none;
+  padding: 0;
+}
+
+.right-panel .text .question-list .question .indicator {
+  position: relative;
+  float: right;
+}
+
+.right-panel .text .question-list .question .indicator:after{
+  content: 	'\25C0';
 }
