@@ -1,31 +1,14 @@
-const blur_max = 10
-
-function blur(begin, end, element) {
-    $({blurRadius: begin}).animate({blurRadius: end}, {
-        duration: 500,
-        easing: 'swing',
-
-        step: function () {
-            $(element).css({
-                "-webkit-filter": "blur(" + this.blurRadius + "px)",
-                "filter": "blur(" + this.blurRadius + "px)"
-            });
-        }
-    });
-}
-
 $(".faq-button button").click(function () {
     hide(0)
     $(".right-panel").animate({"margin-right": '+=30%'});
-    $(".main-content").css({"pointer-events": "none", "user-select": "none", "-webkit-user-select": "none"})
-    blur(0, blur_max, '.main-content')
 });
 
 $(".right-panel .close").click(function () {
 
-    $(".right-panel").animate({"margin-right": '-=30%'}, () => hide(0));
-    $(".main-content").css({"pointer-events": "auto", "user-select": "auto", "-webkit-user-select": "auto"})
-    blur(blur_max, 0, '.main-content')
+    $(".right-panel").animate({"margin-right": '-=30%'}, () => {
+        hide(0)
+        rotate(-90, 0, $(".indicator"), 0)
+    });
 });
 
 function hide(time) {
