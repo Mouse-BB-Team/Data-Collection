@@ -1,6 +1,6 @@
-const utils = require('../server.utils.js');
+const utils = require('../src/server/server.utils.js');
 const request = require('request-promise');
-const router = require('../server.routes.js');
+const router = require('../src/server/server.routes.js');
 
 const mockedRequestPromisePostCall = jest.spyOn(request, 'post');
 

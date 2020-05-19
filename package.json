@@ -2,10 +2,10 @@
   "name": "data_collecting_site",
   "version": "1.0.0",
   "description": "Template html site to run script to collect mouse data",
-  "main": "server.config.js",
+  "main": "src/server/server.config.js",
   "scripts": {
-    "start": "node server.start.js",
-    "dev": "nodemon server.start.js",
+    "start": "node src/server/server.start.js",
+    "dev": "nodemon src/server/server.start.js",
     "test": "jest",
     "test-watch": "jest --watch"
   },

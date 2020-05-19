@@ -1,6 +1,6 @@
-const app = require('../server.config.js');
+const app = require('../src/server/server.config.js');
 const request = require('supertest');
-const acquiredData = require('../server.routes.js');
+const acquiredData = require('../src/server/server.routes.js');
 
 
 describe("POST to /api/store-data", () => {

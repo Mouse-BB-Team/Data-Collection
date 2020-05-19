@@ -1,5 +1,5 @@
 const request = require('request-promise');
-const logger = require('./loggerModule.js');
+const logger = require('../loggerModule.js');
 let router = require('./server.routes.js');
 
 let SEC = 5;

@@ -1,4 +1,4 @@
-const eventTime = require('../public/js/eventTime.js');
+const eventTime = require('../src/public/js/eventTime.js');
 const MockDate = require('mockdate');
 
 describe('Time format test setup', () => {
