@@ -1,0 +1,23 @@
+{
+  "name": "performance-tests",
+  "version": "1.0.0",
+  "description": "performance test for data-collection module",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bachelor-Degree-2020-2021/Data-Collection.git"
+  },
+  "author": "Piotr Kuglin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bachelor-Degree-2020-2021/Data-Collection/issues"
+  },
+  "homepage": "https://github.com/Bachelor-Degree-2020-2021/Data-Collection#readme",
+  "dependencies": {
+    "log4js": "^6.2.1",
+    "node-fetch": "^2.6.0"
+  }
+}
