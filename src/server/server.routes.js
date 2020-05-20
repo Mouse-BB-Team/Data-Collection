@@ -1,15 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const logger = require('../loggerModule.js');
 const request = require('request-promise');
-const fs = require('fs');
-const path = require('path');
-
 
 const router = express.Router();
 
-const HTTP_CREATED_201 = 201;
-
 let collectedEventData = [];
+
 
 router.post('/api/store-data', (req, res) => {
     const eventsList = JSON.parse(req.body.mouseEvents);
@@ -25,29 +22,40 @@ router.post('/api/store-data', (req, res) => {
         collectedEventData.push(userEvent);
     }
     logger.info(`Got Post no ${collectedEventData.length}`);
-    res.status(HTTP_CREATED_201).end();
+    res.status(201).end();
 });
 
 
-router.post('/signup', (req, res) => {
-    const login = req.body.login;
+router.post('/signup', async (req, res) => {
+    const username = req.body.username;
     const password = req.body.password;
 
     const options = {
         method: 'POST',
-        uri: 'http://localhost:8080/user/create',
+        uri: 'https://mouse-bb-api.herokuapp.com/user/create',
+        // uri: 'http://localhost:8080/user/create',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + Buffer.from(`admin:admin`).toString('base64')
+            'Content-Type': 'application/json'
         },
         body: {
-            "message": "singupMessage"
+            login: username,
+            password: password
         },
         resolveWithFullResponse: true,
         json: true
     };
-    res.setHeader('Content-Type', 'application/json');
-    res.end();
+
+    try {
+        const response = await request.post(options);
+        if (response.statusCode === 201) {
+            res.redirect(301, '/login.html');
+        }
+    } catch (err) {
+        logger.error(`Signup error: ${err.message}`);
+        if (err.statusCode === 400) {
+            res.redirect(301, '/signup_error.html')
+        }
+    }
 });
 
 
@@ -55,12 +63,13 @@ router.post('/login', async (req, res) => {
     const credLogin = req.body.username;
     const credPassword = req.body.password;
 
-    const appClientId = 'client_id';
-    const appClientSecret = 'password';
+    const appClientId = process.env.API_CLIENT_ID;
+    const appClientSecret = process.env.API_CLIENT_SECRET;
 
     const options = {
         method: 'POST',
-        uri: 'http://localhost:8080/oauth/token',
+        uri: 'https://mouse-bb-api.herokuapp.com/oauth/token',
+        // uri: 'http://localhost:8080/oauth/token',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': 'Basic ' + Buffer.from(`${appClientId}:${appClientSecret}`).toString('base64')
@@ -81,8 +90,9 @@ router.post('/login', async (req, res) => {
         if (response.statusCode === 200) {
             const cookieOptions = {
                 maxAge: 1000 * response.body.expires_in,
-                // TODO: sameSite: "strict",
-                // TODO: secure: true,
+                sameSite: "strict",
+                // TODO
+                secure: true,
                 httpOnly: true
             }
             res.cookie('mouse-bb-token', jwtToken, cookieOptions).redirect(301, '/');

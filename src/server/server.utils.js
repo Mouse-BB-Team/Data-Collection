@@ -19,11 +19,11 @@ const sendDataToAPI = () => {
 
         const options = {
             method: 'POST',
-            // uri: 'http://' + DOMAIN + ".herokuapp.com/" + DATA_ENDPOINT,
-            uri: 'http://' + DOMAIN_LOCALHOST + '/' + DATA_ENDPOINT_LOCALHOST,
+            uri: 'https://' + DOMAIN + ".herokuapp.com/" + DATA_ENDPOINT,
+            // uri: 'http://' + DOMAIN_LOCALHOST + '/' + DATA_ENDPOINT_LOCALHOST,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + Buffer.from(`admin:admin`).toString('base64')
+                'Authorization': 'Bearer ' + "TODO",//TODO
             },
             body: {
                 sessions: dataToSend

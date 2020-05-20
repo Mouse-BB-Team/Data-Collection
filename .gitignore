@@ -4,3 +4,4 @@ node_modules
 jsLibraryMappings.xml
 vcs.xml
 logs/
+.env
