@@ -1,14 +1,17 @@
+const request_promise = require('request-promise');
 const app = require('../src/server/server.config.js');
 const request = require('supertest');
-const acquiredData = require('../src/server/server.routes.js');
-const request_promise = require('request-promise');
+const utils = require('../src/server/server.utils.js');
 const MockDate = require('mockdate');
+
 
 describe("POST to /api/store-data", () => {
     let mouseEventList = [];
+    let PROMISE_MOCK_PASS_FLAG;
+    const mockedRequestPromisePostCall = jest.spyOn(request_promise, 'post');
 
     beforeAll(() => {
-        acquiredData.getCollectedData.clear();
+        utils.getCollectedData.clear();
         mouseEventList = [
             {
                 x_cor: 100,
@@ -30,6 +33,13 @@ describe("POST to /api/store-data", () => {
 
 
     test('should receive valid data form client-side', done => {
+        PROMISE_MOCK_PASS_FLAG = true;
+        mockedRequestPromisePostCall.mockImplementation(async () => {
+            return new Promise((resolve, reject) => {
+                return PROMISE_MOCK_PASS_FLAG ? resolve({statusCode: 200}) : reject({statusCode: 400});
+            });
+        });
+
         request(app)
             .post('/api/store-data')
             .set('Cookie', ['mouse-bb-token=token'])
@@ -43,17 +53,18 @@ describe("POST to /api/store-data", () => {
     });
 
     test('should return mouse data array size of 2', () => {
-        expect(acquiredData.getCollectedData.size).toBe(1);
+        expect(utils.getCollectedData.size).toBe(1);
     });
 
 
     afterAll(() => {
-        acquiredData.getCollectedData.clear();
+        utils.getCollectedData.clear();
+        jest.resetAllMocks();
     });
 });
 
 
-describe('POST request to /login endpoint', () => {
+describe('POST request to /api/login endpoint', () => {
     let PROMISE_MOCK_PASS_FLAG;
     const mockedRequestPromisePostCall = jest.spyOn(request_promise, 'post');
 
@@ -91,7 +102,7 @@ describe('POST request to /login endpoint', () => {
         const password = "windykator1";
 
         request.agent(app)
-            .post('/login')
+            .post('/api/login')
             .send({
                 username: username,
                 password: password
@@ -105,7 +116,7 @@ describe('POST request to /login endpoint', () => {
 
     test('should set cookie', done => {
         request.agent(app)
-            .post('/login')
+            .post('/api/login')
             .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly', done);
             //TODO: release
             // .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly; Secure; SameSite=Strict', done);
@@ -120,12 +131,12 @@ describe('POST request to /login endpoint', () => {
         PROMISE_MOCK_PASS_FLAG = false;
 
         request.agent(app)
-            .post('/login')
+            .post('/api/login')
             .send({
                 username: undefined,
                 password: undefined
             })
-            .expect(301, "Moved Permanently. Redirecting to /login_invalid.html")
+            .expect(301, "Moved Permanently. Redirecting to /user/login_invalid.html")
             .end((err, res) => {
                 if (err) return done(err);
                 done();
@@ -142,7 +153,7 @@ describe('POST request to /login endpoint', () => {
 });
 
 
-describe('POST request to /signup', () => {
+describe('POST request to /api/signup', () => {
     let PROMISE_MOCK_PASS_FLAG;
     const mockedRequestPromisePostCall = jest.spyOn(request_promise, 'post');
 
@@ -161,12 +172,12 @@ describe('POST request to /signup', () => {
         const password = "windykator1";
 
         request(app)
-            .post('/signup')
+            .post('/api/signup')
             .send({
                 username: username,
                 password: password
             })
-            .expect(301, "Moved Permanently. Redirecting to /login.html")
+            .expect(301, "Moved Permanently. Redirecting to /user/login.html")
             .end((err, res) => {
                 if (err) return done(err);
                 done();
@@ -181,12 +192,12 @@ describe('POST request to /signup', () => {
         PROMISE_MOCK_PASS_FLAG = false;
 
         request(app)
-            .post('/signup')
+            .post('/api/signup')
             .send({
                 username: undefined,
                 password: undefined
             })
-            .expect(301, "Moved Permanently. Redirecting to /signup_error.html")
+            .expect(301, "Moved Permanently. Redirecting to /user/signup_error.html")
             .end((err, res) => {
                 if (err) return done(err);
                 done();

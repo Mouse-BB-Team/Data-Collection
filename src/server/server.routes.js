@@ -2,12 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const logger = require('../loggerModule.js');
 const request = require('request-promise');
+const utils = require('./server.utils.js');
 
 const router = express.Router();
 
-let collectedEventData = new Map();
 
-router.post('/api/store-data', (req, res) => {
+router.post('/store-data', utils.authenticateWithToken, (req, res) => {
     const userAccessToken = req.cookies['mouse-bb-token'];
     const eventsList = JSON.parse(req.body.mouseEvents);
     const list = [];
@@ -22,7 +22,9 @@ router.post('/api/store-data', (req, res) => {
         }
         list.push(userEvent);
     }
-    collectedEventData.set(userAccessToken, list);
+
+    utils.getCollectedData.has(userAccessToken) ? utils.getCollectedData.get(userAccessToken).push(...list) : utils.getCollectedData.set(userAccessToken, list);
+
     res.status(201).end();
 });
 
@@ -48,12 +50,12 @@ router.post('/signup', async (req, res) => {
     try {
         const response = await request.post(options);
         if (response.statusCode === 201) {
-            res.redirect(301, '/login.html');
+            res.redirect(301, '/user/login.html');
         }
     } catch (err) {
         logger.error(`Signup error: ${err.message}`);
         if (err.statusCode === 400) {
-            res.redirect(301, '/signup_error.html')
+            res.redirect(301, '/user/signup_error.html')
         }
     }
 });
@@ -99,15 +101,12 @@ router.post('/login', async (req, res) => {
         }
     } catch (err) {
         logger.error(`Login Error: ${err.message}`)
-        res.redirect(301, '/login_invalid.html')
+        res.redirect(301, '/user/login_invalid.html')
     }
 });
 
 
 module.exports =
     {
-        router: router,
-        get getCollectedData() {
-            return collectedEventData
-        }
+        router: router
     };

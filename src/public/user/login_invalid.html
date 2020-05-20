@@ -15,13 +15,13 @@
 <div class="main-content">
     <div class="login-page">
         <div class="form">
-            <form action="http://localhost:9090/login" method="post">
+            <form action="http://localhost:9090/api/login" method="post">
                 <label>
                     <input id="login" name="username" type="text" placeholder="&#xf007;  username"/>
                     <input id="password" name="password" type="password" placeholder="&#xf023;  password"/>
                 </label>
                 <button type="submit">LOGIN</button>
-                <button type="button" onclick="window.location.href='signup.html'">SIGN UP</button>
+                <button type="button" onclick="window.location.href='/user/signup.html'">SIGN UP</button>
                 <p id="" class="message">Wrong login or password</p>
             </form>
         </div>
