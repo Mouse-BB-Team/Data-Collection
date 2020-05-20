@@ -8,7 +8,7 @@ describe("POST to /api/store-data", () => {
     let mouseEventList = [];
 
     beforeAll(() => {
-        acquiredData.setCollectedData = [];
+        acquiredData.getCollectedData.clear();
         mouseEventList = [
             {
                 x_cor: 100,
@@ -32,6 +32,7 @@ describe("POST to /api/store-data", () => {
     test('should receive valid data form client-side', done => {
         request(app)
             .post('/api/store-data')
+            .set('Cookie', ['mouse-bb-token=token'])
             .send({mouseEvents: JSON.stringify(mouseEventList)})
             .expect(201)
             .end((err, res) => {
@@ -41,13 +42,13 @@ describe("POST to /api/store-data", () => {
             });
     });
 
-    test('should return mouse data array length of 2', () => {
-        expect(acquiredData.getCollectedData.length).toBe(2);
+    test('should return mouse data array size of 2', () => {
+        expect(acquiredData.getCollectedData.size).toBe(1);
     });
 
 
     afterAll(() => {
-        acquiredData.setCollectedData = [];
+        acquiredData.getCollectedData.clear();
     });
 });
 
@@ -105,9 +106,9 @@ describe('POST request to /login endpoint', () => {
     test('should set cookie', done => {
         request.agent(app)
             .post('/login')
-            // .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly', done);
+            .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly', done);
             //TODO: release
-            .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly; Secure; SameSite=Strict', done);
+            // .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly; Secure; SameSite=Strict', done);
 
     });
 

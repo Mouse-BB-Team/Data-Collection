@@ -22,7 +22,7 @@ describe('Test External API call', () => {
                 x_res: 1440,
                 y_res: 900
             }];
-        router.setCollectedData = mouseEventList;
+        router.getCollectedData.set("token", mouseEventList);
     });
 
     afterEach(() => {
@@ -30,7 +30,7 @@ describe('Test External API call', () => {
     });
 
     afterAll(() => {
-        router.setCollectedData = [];
+        router.getCollectedData.clear();
     });
 
     test('should make API call when array contains data', () => {
@@ -39,7 +39,7 @@ describe('Test External API call', () => {
     });
 
     test('should not make API call with empty array', () => {
-        router.setCollectedData = [];
+        router.getCollectedData.clear();
 
         utils.sendDataToAPI();
         expect(mockedRequestPromisePostCall).not.toBeCalled();

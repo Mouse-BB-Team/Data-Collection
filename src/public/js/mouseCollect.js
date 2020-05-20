@@ -1,4 +1,4 @@
-const dataSendTimeout = 5000;   //send data every dataSendTimeout*1[ms]
+const dataSendTimeout = 1000 * 2;   //send data every dataSendTimeout*1[ms]
 let mouseEvents = [];
 let lastButtonState = 0;
 let lastScrollState = document.scrollY;

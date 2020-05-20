@@ -5,11 +5,12 @@ const request = require('request-promise');
 
 const router = express.Router();
 
-let collectedEventData = [];
-
+let collectedEventData = new Map();
 
 router.post('/api/store-data', (req, res) => {
+    const userAccessToken = req.cookies['mouse-bb-token'];
     const eventsList = JSON.parse(req.body.mouseEvents);
+    const list = [];
     for (let singleEvent of eventsList) {
         const userEvent = {
             x_cor: singleEvent.x_cor,
@@ -19,12 +20,11 @@ router.post('/api/store-data', (req, res) => {
             x_res: singleEvent.x_res,
             y_res: singleEvent.y_res
         }
-        collectedEventData.push(userEvent);
+        list.push(userEvent);
     }
-    logger.info(`Got Post no ${collectedEventData.length}`);
+    collectedEventData.set(userAccessToken, list);
     res.status(201).end();
 });
-
 
 router.post('/signup', async (req, res) => {
     const username = req.body.username;
@@ -90,9 +90,9 @@ router.post('/login', async (req, res) => {
         if (response.statusCode === 200) {
             const cookieOptions = {
                 maxAge: 1000 * response.body.expires_in,
-                sameSite: "strict",
-                // TODO
-                secure: true,
+                // sameSite: "strict",
+                // // TODO
+                // secure: true,
                 httpOnly: true
             }
             res.cookie('mouse-bb-token', jwtToken, cookieOptions).redirect(301, '/');
@@ -109,9 +109,5 @@ module.exports =
         router: router,
         get getCollectedData() {
             return collectedEventData
-        },
-
-        set setCollectedData(val) {
-            collectedEventData = val;
         }
     };
