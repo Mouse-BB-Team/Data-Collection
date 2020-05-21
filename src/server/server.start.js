@@ -8,4 +8,4 @@ server = app.listen(PORT, () => {
     logger.info(`Server running on port ${PORT}`);
 });
 
-utilities.sendDataToAPI();
+// utilities.sendDataToAPI();

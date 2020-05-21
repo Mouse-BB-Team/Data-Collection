@@ -62,8 +62,8 @@ router.post('/signup', async (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-    const credLogin = req.body.username;
-    const credPassword = req.body.password;
+    const credentialLogin = req.body.username;
+    const credentialPassword = req.body.password;
 
     const appClientId = process.env.API_CLIENT_ID;
     const appClientSecret = process.env.API_CLIENT_SECRET;
@@ -71,15 +71,14 @@ router.post('/login', async (req, res) => {
     const options = {
         method: 'POST',
         uri: 'https://mouse-bb-api.herokuapp.com/oauth/token',
-        // uri: 'http://localhost:8080/oauth/token',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': 'Basic ' + Buffer.from(`${appClientId}:${appClientSecret}`).toString('base64')
         },
         form: {
             grant_type: "password",
-            username: credLogin,
-            password: credPassword
+            username: credentialLogin,
+            password: credentialPassword
         },
         resolveWithFullResponse: true,
         json: true
@@ -87,9 +86,10 @@ router.post('/login', async (req, res) => {
 
     try {
         const response = await request.post(options);
-        const jwtToken = response.body.access_token;
 
         if (response.statusCode === 200) {
+            const jwtToken = response.body.access_token;
+
             const cookieOptions = {
                 maxAge: 1000 * response.body.expires_in,
                 // sameSite: "strict",
@@ -97,6 +97,9 @@ router.post('/login', async (req, res) => {
                 // secure: true,
                 httpOnly: true
             }
+
+            utils.getRedisAgent.setex(jwtToken, response.body.expires_in, credentialLogin);
+
             res.cookie('mouse-bb-token', jwtToken, cookieOptions).redirect(301, '/');
         }
     } catch (err) {

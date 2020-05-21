@@ -18,6 +18,7 @@
     "express": "^4.17.1",
     "jquery": "^3.5.0",
     "log4js": "^6.2.1",
+    "redis": "^3.0.2",
     "request": "^2.88.2",
     "request-promise": "^4.2.5"
   },
