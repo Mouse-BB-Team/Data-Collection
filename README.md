@@ -22,3 +22,6 @@
 ##### 3. `static external IP address` named web-static-ip:
 
 	gcloud compute addresses create web-static-ip --global
+
+
+![JWT-obtaining-sequence](https://github.com/Bachelor-Degree-2020-2021/Data-Collection/blob/collecting_site/JWT%20token%20obtaining%20sequence.jpg?raw=true)
