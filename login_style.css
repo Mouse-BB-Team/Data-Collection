@@ -130,6 +130,7 @@
   margin: auto;
   -webkit-user-select: none;
   user-select: none;
+  z-index: 4;
 }
 
 .cookie-banner p {
@@ -138,7 +139,7 @@
   top: 50%;
   left: 50%;
   margin-right: -50%;
-  transform: translate(-50%, -50%)
+  transform: translate(-50%, -50%);
 }
 
 .faq-button {
@@ -162,10 +163,16 @@
   font-weight: bold;
   outline: 0;
   letter-spacing: .1em;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .faq-button button:hover,.form button:active,.form button:focus {
   background: #095087;
+}
+
+.faq-dimmed{
+  z-index: 2;
+  display: none;
 }
 
 .right-panel {
@@ -173,10 +180,11 @@
   top: 0;
   right: -30%;
   width: 30%;
-  height: 100%;
+  height: 97%;
   background: rgb(85, 149, 212);
   color: white;
-  overflow: scroll;
+  overflow-y: scroll;
+  z-index: 3;
 }
 
 .right-panel .close {
@@ -244,6 +252,7 @@
   -webkit-user-select: none;
   cursor:pointer;
   line-height: 170%;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .right-panel .point .answer {
@@ -252,6 +261,7 @@
   border-radius: 7px;
   font-size: 16px;
   line-height: 160%;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .right-panel .text .question-list{
@@ -266,4 +276,118 @@
 
 .right-panel .text .question-list .question .indicator:after{
   content: 	'\25C0';
+}
+
+.dimmed-panel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, .8);
+}
+
+.banner-panel {
+  z-index: 3;
+  display: none;
+}
+
+.banner  {
+  z-index: 4;
+  background: #18668d;
+  width: 80%;
+  height: 60%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.dimmed-banner {
+  display: none;
+}
+
+.banner-title {
+  color: #104d6a;
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+  font-size: 30px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  text-align: center;
+  background: white;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.banner-text {
+  color: white;
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  margin-left: 5%;
+  margin-right: 5%;
+  line-height: 170%;
+  text-align: justify;
+  height: inherit;
+  overflow: auto;
+}
+
+.banner-button-panel {
+  text-align: center;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 30px;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.banner-button {
+  width: 140px;
+  height: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.faq-banner-button {
+  background: #7d7b7b;
+}
+
+.agree-banner-button {
+  background: #ce2d2d;
+}
+
+.flex-space {
+  width: 40px;
+}
+
+.banner-button p {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.banner-button.agree-banner-button p {
+  color: white;
+}
+
+.banner-button.faq-banner-button p {
+  color: white;
+}
+
+.separator {
+  height: 100px;
 }

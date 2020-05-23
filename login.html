@@ -2,16 +2,40 @@
 <html lang="en" >
 <html>
 <head>
-  <title>Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="login_style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
-  <script src="credentials-upload.js" async defer></script>
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="login_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="faq_panel.js" async defer></script>
+    <script src="banner_animate.js" async defer></script>
 </head>
 
 <body class="body">
+
+<div class="dimmed-panel faq-dimmed faq-panel-slide-out"></div>
+
+<div class="dimmed-panel banner-panel">
+    <div class="banner">
+        <div class="banner-title">
+            Terms of usage
+        </div>
+        <div class="banner-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed bibendum metus, a lacinia lacus. Aliquam tempus feugiat dui sed suscipit. Ut id lectus hendrerit turpis molestie mollis at luctus purus. Praesent id fringilla lectus, posuere maximus tortor. Nam tristique dui nec erat volutpat iaculis. Aenean turpis arcu, ultrices at auctor sed, lacinia et urna. Mauris vehicula tortor eget tortor scelerisque porttitor quis id justo. Nam suscipit elementum lorem et tempor. Suspendisse viverra dapibus ex, et dictum erat. Donec pharetra magna eu cursus pharetra. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+
+            Nam convallis, elit in elementum pretium, odio sapien volutpat quam, convallis sagittis elit justo nec nibh. Vestibulum tristique ultricies felis at scelerisque. Sed et tempus nisi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi tincidunt erat ac libero ullamcorper semper. Aliquam erat volutpat. Integer cursus sit amet purus sed interdum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In quis turpis at nisi sodales eleifend. Ut fringilla rhoncus ex, ut egestas nisl commodo in. Fusce a volutpat urna, eu bibendum justo. Nunc dignissim tristique suscipit. Donec tincidunt dignissim tempus.
+        </div>
+        <div class="banner-button-panel">
+            <div class="banner-button agree-banner-button"><p>I agree</p></div>
+            <div class="flex-space"></div>
+            <div class="banner-button faq-banner-button"><p>FAQ</p></div>
+        </div>
+        <div class="dimmed-panel dimmed-banner faq-panel-slide-out"></div>
+    </div>
+</div>
+
 <div class="main-content">
     <div class="login-page">
         <div class="form">

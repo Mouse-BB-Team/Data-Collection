@@ -1,15 +1,39 @@
-$(".faq-button button").click(function () {
+const faqPanelSlideOut = $(".faq-panel-slide-out")
+const dimmedPanelDimmedBanner = $(".dimmed-panel.dimmed-banner")
+
+function slideInRightFaqPanel() {
+    faqPanelSlideOut.css({"pointer-events": "auto"})
     hide(0)
     $(".right-panel").animate({"margin-right": '+=30%'});
+}
+
+
+$(".faq-button button").click(function () {
+    slideInRightFaqPanel()
+    $(".dimmed-panel.faq-dimmed").fadeIn();
 });
 
-$(".right-panel .close").click(function () {
+$(".faq-banner-button").click(function () {
+    slideInRightFaqPanel()
+    $(".dimmed-banner").fadeIn();
+})
+
+function slideOutRightFaqPanel () {
+    faqPanelSlideOut.css({"pointer-events": "none"})
 
     $(".right-panel").animate({"margin-right": '-=30%'}, () => {
         hide(0)
         rotate(-90, 0, $(".indicator"), 0)
     });
-});
+    $(".dimmed-panel.faq-dimmed").fadeOut();
+
+    if (dimmedPanelDimmedBanner.css("display") === "block")
+        dimmedPanelDimmedBanner.fadeOut();
+}
+
+$(".right-panel .close").click(slideOutRightFaqPanel);
+
+faqPanelSlideOut.click(slideOutRightFaqPanel)
 
 function hide(time) {
     $(".right-panel .point .answer").slideUp(time);
