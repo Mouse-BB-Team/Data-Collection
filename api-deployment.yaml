@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dc-api
+  labels:
+    app: dc-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dc-api
+  template:
+    metadata:
+      labels:
+        app: dc-api
+    spec:
+      containers:
+      - name: dc-api
+        image: dc-api
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        envFrom:
+            - configMapRef:
+                name: dc-api
+            - secretRef:
+                name: dc-api
+            - secretRef:
+                name: postgres
+        resources:
+          limits:
+            cpu: "0.5"
+          requests:
+            cpu: "0.2"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          periodSeconds: 5
+          initialDelaySeconds: 200

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dc-api
+  labels:
+    app: dc-api
+data:
+  SPRING_PROFILES_ACTIVE: user
+  OAUTH2_TOKENEXPIREDTIME: "200"
+  OAUTH2_REFRESHTOKENEXPIREDTIME: "220"
