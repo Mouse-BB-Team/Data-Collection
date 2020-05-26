@@ -41,7 +41,8 @@ class SecurityConfigUserMode extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(HttpMethod.POST, ContextPath.USER_MAIN_PATH + ContextPath.USER_CREATE_PATH);
+        web.ignoring().antMatchers(HttpMethod.POST, ContextPath.USER_MAIN_PATH + ContextPath.USER_CREATE_PATH)
+                      .antMatchers(HttpMethod.GET,ContextPath.HEALTH_CHECK_PATH);
     }
 
     @Bean
