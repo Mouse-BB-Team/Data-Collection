@@ -7,6 +7,8 @@ function getEventTime() {
     }
 
     const t = new Date();
+
+    // return date in format "yyyy-mm-dd hh:mm:ss.SSS"
     return `${t.getFullYear()}-${zero_str_padding(t.getMonth() + 1)}-${zero_str_padding(t.getDate())} ${zero_str_padding(t.getHours())}:${zero_str_padding(t.getMinutes())}:${zero_str_padding(t.getSeconds())}.${zero_str_padding_mls(t.getMilliseconds())}`
 }
 

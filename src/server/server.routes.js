@@ -1,11 +1,13 @@
-require('dotenv').config();
 const express = require('express');
-const logger = require('../loggerModule.js');
 const request = require('request-promise');
+const logger = require('../loggerModule.js');
 const utils = require('./server.utils.js');
+const redisClient = require('../redis.config.js');
 
 const router = express.Router();
 
+
+router.get('/health', (req, res) => res.status(200).end());
 
 router.post('/store-data', utils.authenticateWithToken, (req, res) => {
     const userAccessToken = req.cookies['mouse-bb-token'];
@@ -34,8 +36,7 @@ router.post('/signup', async (req, res) => {
 
     const options = {
         method: 'POST',
-        uri: 'https://mouse-bb-api.herokuapp.com/user/create',
-        // uri: 'http://localhost:8080/user/create',
+        uri: process.env.API_ROUTE_USER_CREATE,
         headers: {
             'Content-Type': 'application/json'
         },
@@ -70,7 +71,7 @@ router.post('/login', async (req, res) => {
 
     const options = {
         method: 'POST',
-        uri: 'https://mouse-bb-api.herokuapp.com/oauth/token',
+        uri: process.env.API_ROUTE_TOKEN_GRANT,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': 'Basic ' + Buffer.from(`${appClientId}:${appClientSecret}`).toString('base64')
@@ -91,14 +92,15 @@ router.post('/login', async (req, res) => {
             const jwtToken = response.body.access_token;
 
             const cookieOptions = {
-                maxAge: 1000 * response.body.expires_in,
+                maxAge: 1000 * (response.body.expires_in + 20),
                 // sameSite: "strict",
                 // // TODO
                 // secure: true,
                 httpOnly: true
             }
 
-            utils.getRedisAgent.setex(jwtToken, response.body.expires_in, credentialLogin);
+            redisClient.setex(jwtToken, response.body.expires_in, response.body.jti);
+            redisClient.setex(`refresh:${jwtToken}`, response.expires_in + 20, response.body.refresh_token);
 
             res.cookie('mouse-bb-token', jwtToken, cookieOptions).redirect(301, '/');
         }

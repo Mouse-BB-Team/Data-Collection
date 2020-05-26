@@ -68,7 +68,7 @@ describe('Test for user authentication with JWT middleware', () => {
 
         supertest(app)
             .get('/')
-            .set('Cookie', ['mouse-bb-token=token'])
+            .set('Cookie', ['mouse-bb-token='])
             .expect(301, "Moved Permanently. Redirecting to /user/login.html")
             .end((err, res) => {
                 if (err) return done(err);
@@ -91,7 +91,7 @@ describe('Test for user authentication with JWT middleware', () => {
             });
     });
 
-    test('should if token is not null', done => {
+    test('should throw error if token is null', done => {
         supertest(app)
             .get('/')
             // .set('Cookie', ['mouse-bb-token=token']) // no cookie

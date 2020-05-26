@@ -73,17 +73,18 @@ document.addEventListener('wheel', e => {
     lastScrollState = this.scrollY;
 });
 
-// document.addEventListener('mousemove', (e) => {
-//     const mouseMoveEvent = {
-//         x_cor: e.clientX,
-//         y_cor: e.clientY,
-//         event: 'MOVE',
-//         event_time: getEventTime(),
-//         x_res: window.screen.width,
-//         y_res: window.screen.height
-//     }
-//     mouseEvents.push(mouseMoveEvent);
-// });
+
+document.addEventListener('mousemove', (e) => {
+    const mouseMoveEvent = {
+        x_cor: e.clientX,
+        y_cor: e.clientY,
+        event: 'MOVE',
+        event_time: getEventTime(),
+        x_res: window.screen.width,
+        y_res: window.screen.height
+    }
+    mouseEvents.push(mouseMoveEvent);
+});
 
 
 const sendData = () => {

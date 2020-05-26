@@ -1,9 +1,9 @@
 const request_promise = require('request-promise');
-const app = require('../src/server/server.config.js');
 const request = require('supertest');
 const utils = require('../src/server/server.utils.js');
+const app = require('../src/server/server.config.js');
 const MockDate = require('mockdate');
-
+const redisClient = require('../src/redis.config.js');
 
 describe("POST to /api/store-data", () => {
     let mouseEventList = [];
@@ -67,8 +67,11 @@ describe("POST to /api/store-data", () => {
 describe('POST request to /api/login endpoint', () => {
     let PROMISE_MOCK_PASS_FLAG;
     const mockedRequestPromisePostCall = jest.spyOn(request_promise, 'post');
+    const redisMock = jest.spyOn(redisClient, 'setex');
+
 
     beforeAll(() => {
+        redisMock.mockImplementation(() => true);
         mockedRequestPromisePostCall.mockImplementation(async () => {
             return new Promise((resolve, reject) => {
                 if (PROMISE_MOCK_PASS_FLAG) {
@@ -87,7 +90,7 @@ describe('POST request to /api/login endpoint', () => {
     });
 
     beforeEach(() => {
-        MockDate.set('2020-05-17'); // Mock data to be Sun May 2020 02:00:00 GMT-0200
+        MockDate.set('2020-05-17'); // Mock data to be 17 May 2020 00:03:20 GMT-0200
     });
 
     afterEach(() => {
@@ -117,7 +120,7 @@ describe('POST request to /api/login endpoint', () => {
     test('should set cookie', done => {
         request.agent(app)
             .post('/api/login')
-            .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly', done);
+            .expect('set-cookie', 'mouse-bb-token=token; Max-Age=220; Path=/; Expires=Sun, 17 May 2020 00:03:40 GMT; HttpOnly', done);
             //TODO: release
             // .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly; Secure; SameSite=Strict', done);
 
@@ -211,5 +214,18 @@ describe('POST request to /api/signup', () => {
 
     afterAll(() => {
         jest.resetAllMocks();
+    });
+});
+
+
+describe('GET form health endpoint', () => {
+    it('should respond with 200 OK', done => {
+        request(app)
+            .get('/api/health')
+            .expect(200)
+            .end((err, res) => {
+                if (err) return done(err);
+                done();
+            });
     });
 });

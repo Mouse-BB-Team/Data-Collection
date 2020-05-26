@@ -17,8 +17,8 @@
         <div class="form">
             <form action="http://localhost:9090/api/signup" method="post">
                 <label>
-                    <input name="username" type="text" placeholder="set your login (min 8 characters)"/>
-                    <input name="password" type="password" placeholder="set your password (min 8 characters)"/>
+                    <input type="text" placeholder="set your login" minlength="8"/>
+                    <input type="password" placeholder="set your password" minlength="8"/>
                 </label>
                 <button type="submit">SIGN UP</button>
                 <button type="button" onclick="window.location.href='/user/login.html'">LOGIN</button>
