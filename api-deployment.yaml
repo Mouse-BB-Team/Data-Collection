@@ -27,11 +27,11 @@ spec:
                 name: dc-api
             - secretRef:
                 name: postgres
-        resources:
-          limits:
-            cpu: "0.5"
-          requests:
-            cpu: "0.2"
+        # resources:
+        #   limits:
+        #     cpu: "0.5"
+        #   requests:
+        #     cpu: "0.2"
         readinessProbe:
           httpGet:
             path: /health

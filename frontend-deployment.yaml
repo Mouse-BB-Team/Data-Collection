@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dc-frontend
+  labels:
+    app: dc-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dc-frontend
+  template:
+    metadata:
+      labels:
+        app: dc-frontend
+    spec:
+      containers:
+      - name: dc-frontend
+        image: dc-frontend
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 9090
+        envFrom:
+            - configMapRef:
+                name: dc-frontend
+            # - secretRef:
+            #     name: dc-frontend
+        resources:
+          # limits:
+          #   cpu: "0.5"
+          # requests:
+          #   cpu: "0.2"
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 9090
+          initialDelaySeconds: 10
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 9090
+          periodSeconds: 5
+          initialDelaySeconds: 20
