@@ -1,0 +1,33 @@
+version: '3.7'
+networks:
+  dc_front_network:
+    ipam:
+      driver: default
+
+services:
+  redis:
+    container_name: "redis-cache"
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      dc_front_network:
+  dc_front_server:
+    container_name: "node-server"
+    build: ./
+    ports:
+    - "9090:9090"
+    environment:
+      - "PORT=9090"
+      - "API_CLIENT_ID=client_id"
+      - "API_CLIENT_SECRET=password"
+      - "API_ROUTE_USER_CREATE=https://mouse-bb-api.herokuapp.com/user/create"
+      - "API_ROUTE_TOKEN_GRANT=https://mouse-bb-api.herokuapp.com/oauth/token"
+      - "API_ROUTE_TOKEN_CHECK=https://mouse-bb-api.herokuapp.com/oauth/check_token"
+      - "API_ROUTE_SESSION_ADD=https://mouse-bb-api.herokuapp.com/session/add"
+      - "REDIS_IP=redis"
+      - "REDIS_PORT=6379"
+    networks:
+      dc_front_network:
+    depends_on:
+      - redis

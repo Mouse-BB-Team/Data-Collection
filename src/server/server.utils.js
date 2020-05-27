@@ -36,7 +36,7 @@ const getRefreshedToken = async userAccessToken => {
             if (response.statusCode === 200) {
                 const newJwtToken = response.body.access_token;
                 redisClient.setex(newJwtToken, response.body.expires_in, response.body.jti);
-                redisClient.setex(`refresh:${newJwtToken}`, response.expires_in + 20, response.body.refresh_token);
+                redisClient.setex(`refresh:${newJwtToken}`, (response.body.expires_in + 20), response.body.refresh_token);
                 logger.info("Refreshed token return");
                 return response.body;
             }
@@ -114,6 +114,7 @@ const checkCachedToken = async userToken => {
     }
     catch (err) {
         logger.error("Redis returned error when validating cached token: " + err);
+        return false;
     }
     return success;
 }

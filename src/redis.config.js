@@ -15,10 +15,12 @@ const redisClient = redis.createClient({
 });
 
 
-
-
 redisClient.on("error", error => {
-   logger.error(`Redis Error: ${error}`);
+    logger.error(`Redis ${error}`);
+});
+
+redisClient.on("connect", () => {
+    logger.info(`Redis connected`);
 });
 
 module.exports = redisClient;

@@ -6,6 +6,8 @@ const redisClient = require('../redis.config.js');
 
 const router = express.Router();
 
+// NOTE: These routes are "api" routes,
+// therefore express app is configured to use it as !!!"/api/:'endpoint'"!!!
 
 router.get('/health', (req, res) => res.status(200).end());
 
@@ -100,7 +102,7 @@ router.post('/login', async (req, res) => {
             }
 
             redisClient.setex(jwtToken, response.body.expires_in, response.body.jti);
-            redisClient.setex(`refresh:${jwtToken}`, response.expires_in + 20, response.body.refresh_token);
+            redisClient.setex(`refresh:${jwtToken}`, (response.body.expires_in + 20), response.body.refresh_token);
 
             res.cookie('mouse-bb-token', jwtToken, cookieOptions).redirect(301, '/');
         }
