@@ -1,6 +1,9 @@
 package pl.edu.agh.data_collection.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -26,8 +29,12 @@ import static pl.edu.agh.data_collection.exception.BadCredentialsException.Excep
 @RequestMapping(ContextPath.USER_MAIN_PATH)
 public class UserController {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private static final String FULL_PATH_USER_CREATE = ContextPath.USER_MAIN_PATH + ContextPath.USER_CREATE_PATH;
 
     @Autowired
     public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -52,6 +59,8 @@ public class UserController {
         userToSave.setAuthority(UserRole.USER);
 
         userRepository.save(userToSave);
+
+        logger.info("{}: {} ---> saved user: {}, id: {}", HttpMethod.POST, FULL_PATH_USER_CREATE, userToSave.getLogin(), userToSave.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }

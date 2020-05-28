@@ -32,7 +32,14 @@ class LogsHandler {
 
         Object body = returnedValue.getBody();
 
-        log.warn("{}: {}  ({}) ---> {}", method, uri, request.getRemoteUser(), body);
+        String remoteUser;
+
+        if(request.getRemoteUser() == null)
+            remoteUser = "anonymous";
+        else
+            remoteUser = request.getRemoteUser();
+
+        log.warn("{}: {}  ({}) ---> {}", method, uri, remoteUser, body);
         return joinPoint.proceed();
     }
 }

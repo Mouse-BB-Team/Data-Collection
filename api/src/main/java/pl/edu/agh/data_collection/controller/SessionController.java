@@ -1,8 +1,10 @@
 package pl.edu.agh.data_collection.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,23 +16,25 @@ import pl.edu.agh.data_collection.persistence.entity.SessionEntity;
 import pl.edu.agh.data_collection.persistence.repository.EventRepository;
 import pl.edu.agh.data_collection.persistence.repository.SessionRepository;
 import pl.edu.agh.data_collection.persistence.repository.UserRepository;
-import pl.edu.agh.data_collection.utils.Parser;
 import pl.edu.agh.data_collection.utils.TimestampParser;
 import pl.edu.agh.data_collection.utils.UsernameParser;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
 @RequestMapping(ContextPath.SESSION_MAIN_PATH)
 public class SessionController {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final SessionRepository sessionRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final TimestampParser timestampParser;
     private final UsernameParser bearerParser;
+
+    private static final String FULL_PATH_ADD_SESSION_ELEMENT = ContextPath.SESSION_MAIN_PATH + ContextPath.SESSION_ADD_ELEMENT_PATH;
 
     @Autowired
     public SessionController(SessionRepository sessionRepository, EventRepository eventRepository, UserRepository userRepository, TimestampParser timestampParser, UsernameParser bearerParser) {
@@ -53,6 +57,7 @@ public class SessionController {
         }
 
         sessionRepository.saveAll(sessions);
+        logger.info("{}: {} ---> session element saved by user: {}", HttpMethod.POST, FULL_PATH_ADD_SESSION_ELEMENT, userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
