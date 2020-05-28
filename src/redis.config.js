@@ -1,19 +1,15 @@
 const redis = require('redis');
-const logger = require('./loggerModule.js');
+const logger = require('./logger.config.js');
+const { promisify } = require("util");
 
 
-const redisClient = redis.createClient({
+let redisClient = redis.createClient({
     host: process.env.REDIS_IP,
-    port: process.env.REDIS_PORT,
-    // password  : process.env.REDIS_PASSWORD,
-    /** if using SSL */
-    // tls: {
-    //     key : stringValueOfKeyFile,
-    //     cert: stringValueOfCertFile,
-    //     ca  : [ stringValueOfCaCertFile ]
-    // }
+    port: process.env.REDIS_PORT
 });
 
+
+redisClient.getAsync = promisify(redisClient.get).bind(redisClient);
 
 redisClient.on("error", error => {
     logger.error(`Redis ${error}`);

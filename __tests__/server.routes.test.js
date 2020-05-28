@@ -78,7 +78,8 @@ describe('POST request to /api/login endpoint', () => {
                     return resolve({
                         body: {
                             access_token: "token",
-                            expires_in: 200
+                            expires_in: 200,
+                            refresh_token: "refresh_token"
                         },
                         statusCode: 200
                     })
@@ -90,7 +91,7 @@ describe('POST request to /api/login endpoint', () => {
     });
 
     beforeEach(() => {
-        MockDate.set('2020-05-17'); // Mock data to be 17 May 2020 00:03:20 GMT-0200
+        MockDate.set('2020-06-17'); // Mock data to be 17 May 2020 00:03:20 GMT-0200
     });
 
     afterEach(() => {
@@ -118,12 +119,20 @@ describe('POST request to /api/login endpoint', () => {
     });
 
     test('should set cookie', done => {
+        const getFormattedTime = expTime => {
+            const zero_str_padding = t => {
+                return String("0" + t).slice(-2);
+            }
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+            const date = Date.now() + (expTime * 1000);
+            const t = new Date(date);
+            return `${days[t.getDay()]}, ${t.getDate()} ${months[t.getMonth()]} ${t.getUTCFullYear()} ${zero_str_padding(t.getUTCHours())}:${zero_str_padding(t.getMinutes())}:${zero_str_padding(t.getSeconds())} GMT`;
+        }
+
         request.agent(app)
             .post('/api/login')
-            .expect('set-cookie', 'mouse-bb-token=token; Max-Age=220; Path=/; Expires=Sun, 17 May 2020 00:03:40 GMT; HttpOnly', done);
-            //TODO: release
-            // .expect('set-cookie', 'mouse-bb-token=token; Max-Age=200; Path=/; Expires=Sun, 17 May 2020 00:03:20 GMT; HttpOnly; Secure; SameSite=Strict', done);
-
+            .expect('set-cookie', `mouse-bb-token=token; Max-Age=${process.env.OAUTH2_TOKENEXPIREDTIME}; Path=/; Expires=${getFormattedTime(process.env.OAUTH2_TOKENEXPIREDTIME)}; HttpOnly,mouse-bb-refresh-token=refresh_token; Max-Age=${process.env.OAUTH2_REFRESHTOKENEXPIREDTIME}; Path=/; Expires=${getFormattedTime(process.env.OAUTH2_REFRESHTOKENEXPIREDTIME)}; HttpOnly`, done);
     });
 
     test('should verify that api has been called', () => {

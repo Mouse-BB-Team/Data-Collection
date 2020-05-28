@@ -1,6 +1,6 @@
 const express = require('express');
 const request = require('request-promise');
-const logger = require('../loggerModule.js');
+const logger = require('../logger.config.js');
 const utils = require('./server.utils.js');
 const redisClient = require('../redis.config.js');
 
@@ -9,9 +9,10 @@ const router = express.Router();
 // NOTE: These routes are "api" routes,
 // therefore express app is configured to use it as !!!"/api/:'endpoint'"!!!
 
-router.get('/health', (req, res) => res.status(200).end());
+router.get('/api/health', (req, res) => res.status(200).end());
 
-router.post('/store-data', utils.authenticateWithToken, (req, res) => {
+
+router.post('/api/store-data', utils.authenticateWithToken, (req, res) => {
     const userAccessToken = req.cookies['mouse-bb-token'];
     const eventsList = JSON.parse(req.body.mouseEvents);
     const list = [];
@@ -32,7 +33,8 @@ router.post('/store-data', utils.authenticateWithToken, (req, res) => {
     res.status(201).end();
 });
 
-router.post('/signup', async (req, res) => {
+
+router.post('/api/signup', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -64,7 +66,7 @@ router.post('/signup', async (req, res) => {
 });
 
 
-router.post('/login', async (req, res) => {
+router.post('/api/login', async (req, res) => {
     const credentialLogin = req.body.username;
     const credentialPassword = req.body.password;
 
@@ -92,19 +94,33 @@ router.post('/login', async (req, res) => {
 
         if (response.statusCode === 200) {
             const jwtToken = response.body.access_token;
+            const refreshToken = response.body.refresh_token;
 
-            const cookieOptions = {
-                maxAge: 1000 * (response.body.expires_in + 20),
+            const accessTokenExpire = process.env.OAUTH2_TOKENEXPIREDTIME;
+            const refreshTokenExpire = process.env.OAUTH2_REFRESHTOKENEXPIREDTIME;
+
+            const accessCookieOptions = {
+                maxAge: 1000 * accessTokenExpire,
                 // sameSite: "strict",
                 // // TODO
                 // secure: true,
                 httpOnly: true
             }
 
-            redisClient.setex(jwtToken, response.body.expires_in, response.body.jti);
-            redisClient.setex(`refresh:${jwtToken}`, (response.body.expires_in + 20), response.body.refresh_token);
+            const refreshCookieOptions = {
+                maxAge: 1000 * refreshTokenExpire,
+                // sameSite: "strict",
+                // // TODO
+                // secure: true,
+                httpOnly: true
+            }
 
-            res.cookie('mouse-bb-token', jwtToken, cookieOptions).redirect(301, '/');
+            redisClient.setex(jwtToken, accessTokenExpire, response.body.jti);
+            redisClient.setex(refreshToken, refreshTokenExpire, response.body.jti);
+
+            res.cookie('mouse-bb-token', jwtToken, accessCookieOptions);
+            res.cookie('mouse-bb-refresh-token', refreshToken, refreshCookieOptions);
+            res.redirect(301, '/');
         }
     } catch (err) {
         logger.error(`Login Error: ${err.message}`)

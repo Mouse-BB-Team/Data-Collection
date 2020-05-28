@@ -1,5 +1,5 @@
 const app = require('./server.config.js');
-const logger = require('../loggerModule.js');
+const logger = require('../logger.config.js');
 const utilities = require('./server.utils.js');
 
 const PORT = process.env.PORT;

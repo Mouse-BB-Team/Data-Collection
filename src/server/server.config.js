@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({extended: true}));
 app.use('/user', express.static(path.join(__dirname, "..", 'public', 'user')));
-app.use('/api', router.router);
+app.use('', router.router);
 app.use(utils.authenticateWithToken, express.static(path.join(__dirname, "..", 'public')));
 
 module.exports = app;

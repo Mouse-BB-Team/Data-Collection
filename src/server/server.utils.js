@@ -1,30 +1,49 @@
 const request = require('request-promise');
-const logger = require('../loggerModule.js');
+const logger = require('../logger.config.js');
 const redisClient = require('../redis.config.js');
 
-const { promisify } = require("util");
-let getAsync = promisify(redisClient.get).bind(redisClient);
 
 let SEC = 10;
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 let collectedEventData = new Map();
 
+const authenticateWithToken = async (req, res, next) => {
+    const userAccessToken = req.cookies['mouse-bb-token'];
+    const userRefreshToken = req.cookies['mouse-bb-refresh-token'];
 
-const getRefreshedToken = async userAccessToken => {
-    const refreshToken = await getAsync(`refresh:${userAccessToken}`);
+    if (!userAccessToken && !userRefreshToken) {
+        logger.error("Error: token is null");
+        return res.redirect(301, '/user/login.html');
+    }
 
-    if (refreshToken !== null) {
+    if (!userAccessToken && userRefreshToken) {
+        logger.warn("Access token is null, attempting to refresh token");
+        try {
+            await checkRefresh(res, userRefreshToken);
+            return next();
+        } catch (err) {
+            logger.error("Error when attempting to refresh token");
+        }
+    }
+
+    if (userAccessToken) {
+        const isCachedTokenValid = await checkCachedToken(userAccessToken);
+
+        if (isCachedTokenValid) {
+            return next();
+        }
+
+        logger.warn("Redis token not okay, checking with api");
         const options = {
             method: 'POST',
-            uri: process.env.API_ROUTE_TOKEN_GRANT,
+            uri: process.env.API_ROUTE_TOKEN_CHECK,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Authorization': 'Basic ' + Buffer.from(`${process.env.API_CLIENT_ID}:${process.env.API_CLIENT_SECRET}`).toString('base64')
             },
             form: {
-                grant_type: "refresh_token",
-                refresh_token: refreshToken
+                token: userAccessToken
             },
             resolveWithFullResponse: true,
             json: true
@@ -32,92 +51,111 @@ const getRefreshedToken = async userAccessToken => {
 
         try {
             const response = await request.post(options);
-
             if (response.statusCode === 200) {
-                const newJwtToken = response.body.access_token;
-                redisClient.setex(newJwtToken, response.body.expires_in, response.body.jti);
-                redisClient.setex(`refresh:${newJwtToken}`, (response.body.expires_in + 20), response.body.refresh_token);
-                logger.info("Refreshed token return");
-                return response.body;
+                logger.info("User authenticated with valid token");
+                return next();
             }
         } catch (err) {
-            logger.error("Error when refreshing");
-            return null;
+            if (err.statusCode === 400 && userRefreshToken) {
+                logger.info("API validation failed, attempting to grant access with refresh token");
+                try {
+                    await checkRefresh(res, userRefreshToken, next);
+                    return next();
+                } catch (err) {
+                    logger.error("Token refreshing failed after API failure");
+                }
+            }
         }
+    } else {
+        logger.error("Error occur during token validation");
+        return res.redirect(301, '/user/login.html');
+    }
+}
+
+
+const checkRefresh = async (res, refreshToken) => {
+    const responseWithNewToken = await getRefreshedToken(refreshToken);
+    if (responseWithNewToken) {
+        const accessTokenExp = process.env.OAUTH2_TOKENEXPIREDTIME;
+        const refreshTokenExp = process.env.OAUTH2_REFRESHTOKENEXPIREDTIME;
+
+        const cookieOptions = {
+            maxAge: 1000 * accessTokenExp,
+            // sameSite: "strict",
+            // // TODO
+            // secure: true,
+            httpOnly: true
+        }
+
+        const refreshCookieOptions = {
+            maxAge: 1000 * refreshTokenExp,
+            // sameSite: "strict",
+            // // TODO
+            // secure: true,
+            httpOnly: true
+        }
+        res.cookie('mouse-bb-token', responseWithNewToken.access_token, cookieOptions);
+        res.cookie('mouse-bb-refresh-token', responseWithNewToken.refresh_token, refreshCookieOptions);
+        return;
+    }
+    return null;
+}
+
+
+const getRefreshedToken = async userRefreshToken => {
+    const options = {
+        method: 'POST',
+        uri: process.env.API_ROUTE_TOKEN_GRANT,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + Buffer.from(`${process.env.API_CLIENT_ID}:${process.env.API_CLIENT_SECRET}`).toString('base64')
+        },
+        form: {
+            grant_type: "refresh_token",
+            refresh_token: userRefreshToken
+        },
+        resolveWithFullResponse: true,
+        json: true
+    };
+
+    try {
+        const response = await request.post(options);
+
+        if (response.statusCode === 200) {
+            const newJwtToken = response.body.access_token;
+            const newRefreshToken = response.body.refresh_token;
+
+            const accessTokenExpire = process.env.OAUTH2_TOKENEXPIREDTIME;
+            const refreshTokenExpire = process.env.OAUTH2_REFRESHTOKENEXPIREDTIME;
+
+            redisClient.setex(newJwtToken, accessTokenExpire, response.body.jti);
+            redisClient.setex(newRefreshToken, refreshTokenExpire, response.body.jti);
+            logger.info("Refreshed token return");
+            return response.body;
+        }
+    } catch (err) {
+        logger.error("Error when refreshing");
+        return null;
     }
     logger.error("Refresh token expired");
     return null;
 }
 
-
-const authenticateWithToken = async (req, res, next) => {
-    const userAccessToken = req.cookies['mouse-bb-token'];
-
-    if (userAccessToken == null) {
-        logger.error("Error: token is null");
-        res.redirect(301, '/user/login.html');
-    } else {
-        const isCachedTokenValid = await checkCachedToken(userAccessToken);
-        if (isCachedTokenValid) {
-            // logger.info("Redis token okay");
-            return next();
-        } else {
-            logger.warn("Redis token not okay, checking with api");
-            const options = {
-                method: 'POST',
-                uri: process.env.API_ROUTE_TOKEN_CHECK,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + Buffer.from(`${process.env.API_CLIENT_ID}:${process.env.API_CLIENT_SECRET}`).toString('base64')
-                },
-                form: {
-                    token: userAccessToken
-                },
-                resolveWithFullResponse: true,
-                json: true
-            };
-
-            try {
-                const response = await request.post(options);
-                if (response.statusCode === 200) {
-                    logger.info("User authenticated with valid token");
-                    return next();
-                }
-            } catch (err) {
-                if (err.statusCode === 400) {
-                    const responseWithNewToken = await getRefreshedToken(userAccessToken);
-                    if (responseWithNewToken !== null) {
-                        const cookieOptions = {
-                            maxAge: 1000 * (responseWithNewToken.expires_in + 20),
-                            // sameSite: "strict",
-                            // // TODO
-                            // secure: true,
-                            httpOnly: true
-                        }
-                        res.cookie('mouse-bb-token', responseWithNewToken.access_token, cookieOptions);
-                        return next();
-                    }
-                }
-                logger.error("Error occur during token validation");
-                res.redirect(301, '/user/login.html')
-            }
-        }
-    }
-}
-
 const checkCachedToken = async userToken => {
     let success = false;
-    try {
-        const reply = await getAsync(userToken);
-        if (reply !== null)
-            success = true;
-    }
-    catch (err) {
-        logger.error("Redis returned error when validating cached token: " + err);
-        return false;
+    if (userToken) {
+        try {
+            const reply = await redisClient.getAsync(userToken);
+            if (reply !== null)
+                success = true;
+        } catch (err) {
+            logger.error("Redis returned error when validating cached token: " + err);
+            return false;
+        }
     }
     return success;
 }
+
 
 const sendDataToAPI = () => {
     if (collectedEventData.size !== 0) {
@@ -159,13 +197,12 @@ const sendDataToAPI = () => {
     logger.info(`waiting ${SEC} sec`);
 }
 
-exports.getAsync = getAsync;
-exports.checkCachedToken = checkCachedToken;
 
 module.exports =
     {
         sendDataToAPI: sendDataToAPI,
         authenticateWithToken: authenticateWithToken,
+        checkCachedToken: checkCachedToken,
         set timeout(val) {
             SEC = val;
         },
