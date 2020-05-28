@@ -128,8 +128,10 @@ const getRefreshedToken = async userRefreshToken => {
             const accessTokenExpire = process.env.OAUTH2_TOKENEXPIREDTIME;
             const refreshTokenExpire = process.env.OAUTH2_REFRESHTOKENEXPIREDTIME;
 
-            redisClient.setex(newJwtToken, accessTokenExpire, response.body.jti);
-            redisClient.setex(newRefreshToken, refreshTokenExpire, response.body.jti);
+            if (redisClient.connected) {
+                redisClient.setex(newJwtToken, accessTokenExpire, response.body.jti);
+                redisClient.setex(newRefreshToken, refreshTokenExpire, response.body.jti);
+            }
             logger.info("Refreshed token return");
             return response.body;
         }
@@ -143,7 +145,7 @@ const getRefreshedToken = async userRefreshToken => {
 
 const checkCachedToken = async userToken => {
     let success = false;
-    if (userToken) {
+    if (userToken && redisClient.connected) {
         try {
             const reply = await redisClient.getAsync(userToken);
             if (reply !== null)

@@ -115,8 +115,10 @@ router.post('/api/login', async (req, res) => {
                 httpOnly: true
             }
 
-            redisClient.setex(jwtToken, accessTokenExpire, response.body.jti);
-            redisClient.setex(refreshToken, refreshTokenExpire, response.body.jti);
+            if (redisClient.connected) {
+                redisClient.setex(jwtToken, accessTokenExpire, response.body.jti);
+                redisClient.setex(refreshToken, refreshTokenExpire, response.body.jti);
+            }
 
             res.cookie('mouse-bb-token', jwtToken, accessCookieOptions);
             res.cookie('mouse-bb-refresh-token', refreshToken, refreshCookieOptions);
