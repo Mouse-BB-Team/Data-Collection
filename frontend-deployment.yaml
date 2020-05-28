@@ -5,7 +5,7 @@ metadata:
   labels:
     app: dc-frontend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: dc-frontend
@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: dc-frontend
-        image: dc-frontend
-        imagePullPolicy: Never
+        image: gcr.io/neural-pattern-278618/dc-frontend
+        imagePullPolicy: Always
         ports:
         - containerPort: 9090
         envFrom:
@@ -25,11 +25,11 @@ spec:
                 name: dc-frontend
             # - secretRef:
             #     name: dc-frontend
-        resources:
-          # limits:
-          #   cpu: "0.5"
-          # requests:
-          #   cpu: "0.2"
+            # resources:
+                # limits:
+                # cpu: "0.1"
+                # requests:
+                # cpu: "0.1"
         readinessProbe:
           httpGet:
             path: /api/health
