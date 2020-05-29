@@ -133,6 +133,18 @@
   z-index: 4;
 }
 
+@media (min-width: 555px) {
+  .cookie-banner {
+    font-size: initial;
+  }
+}
+
+@media (max-width: 554px) {
+  .cookie-banner {
+    font-size: 12px;
+  }
+}
+
 .cookie-banner p {
   margin: 0;
   position: absolute;
@@ -302,6 +314,9 @@
   left: 50%;
   transform: translate(-50%, -60%);
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .dimmed-banner {
@@ -328,24 +343,28 @@
   color: white;
   font-family: "Roboto", sans-serif;
   font-size: 20px;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 5px;
+  margin-right: 5px;
   line-height: 170%;
   text-align: justify;
   height: inherit;
   overflow: auto;
+  padding-left: 60px;
+  padding-right: 60px;
+  margin-bottom: 30px;
 }
 
 .banner-button-panel {
   text-align: center;
-  position: fixed;
+  /*position: fixed;*/
   left: 50%;
-  transform: translate(-50%, 0);
-  bottom: 30px;
+  /*transform: translate(-50%, 0);*/
+  /*bottom: 30px;*/
   width: 100%;
   height: 40px;
   display: flex;
   justify-content: center;
+  padding-bottom: 30px;
 }
 
 .banner-button {
