@@ -9,21 +9,46 @@
     <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/faq_panel.js" async defer></script>
+    <script src="js/banner_animate.js" async defer></script>
 </head>
 
 <body class="body">
+
+<div class="dimmed-panel faq-dimmed faq-panel-slide-out"></div>
+
+<div class="dimmed-panel banner-panel">
+    <div class="banner">
+        <div class="banner-title">
+            Terms of usage
+        </div>
+        <div class="banner-text">
+            This site is created for academical purpose. The main idea is to collect mouse data of the user who is using this site. When you decide to use this site you agree with collecting your mouse data such as coordinates of pointer, clicks of buttons and use of scroll button.
+            The data will be used for preparing bachelor degree thesis - <i>"Protection of web application with behavioral biometrics"</i>. The data will not be publish in thesis or in other way. The data will be delete after complete of study. The login credentials are collated with mouse data for distinguish behavior purpose. All data are anonymous. We kindly ask you to create an account with login and password which are not used in other applications or websites due to additional security and anonymousness.
+            You can use this site many times, so we kindly ask to use the same account to associate data with the same user.
+            This Website is provided “as is,” with all faults, and creators makes no express or implied representations or warranties, of any kind related to this Website or the materials contained on this Website. Additionally, nothing contained on this Website shall be construed as providing consult or advice to you, as well as all the products and offers on this website are just example of real world trade offers and are not a real world offer.
+            For more information check the FAQ tab.<br><br>
+            <center>If you DO NOT AGREE with our terms, please leave the site.</center>
+        </div>
+        <div class="banner-button-panel">
+            <div class="banner-button agree-banner-button"><p>I agree</p></div>
+            <div class="flex-space"></div>
+            <div class="banner-button faq-banner-button"><p>FAQ</p></div>
+        </div>
+        <div class="dimmed-panel dimmed-banner faq-panel-slide-out"></div>
+    </div>
+</div>
+
 <div class="main-content">
     <div class="login-page">
         <div class="form">
-            <!--            TODO URL AND PORT-->
             <form id="login-page-action" name="login-page-action" action="http://localhost:9090/api/login" method="post">
                 <label>
-                    <input id="login" name="username" type="text" placeholder="&#xf007;  username"/>
+                    <input id="login" name="login" type="text" placeholder="&#xf007;  username"/>
                     <input id="password" name="password" type="password" placeholder="&#xf023;  password"/>
                 </label>
                 <button type="submit">LOGIN</button>
-                <button type="button" onclick="window.location.href='/user/signup.html'">SIGN UP</button>
-                <p id="" class="message">Wrong login or password</p>
+                <button type="button" onclick="window.location.href='../../../signup.html'">SIGN UP</button>
+                <p class="message">Wrong login or password</p>
             </form>
         </div>
     </div>
@@ -38,3 +63,4 @@
 <div class="cookie-banner"><p>We use cookies to ensure that we give you the best experience on our website.</p></div>
 </body>
 </html>
+
