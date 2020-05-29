@@ -1,10 +1,14 @@
 const faqPanelSlideOut = $(".faq-panel-slide-out")
 const dimmedPanelDimmedBanner = $(".dimmed-panel.dimmed-banner")
+const rightPanel =  $(".right-panel")
 
 function slideInRightFaqPanel() {
     faqPanelSlideOut.css({"pointer-events": "auto"})
     hide(0)
-    $(".right-panel").animate({"margin-right": '+=30%'});
+    let width = rightPanel[0].offsetWidth
+
+    console.log(width)
+    rightPanel.animate({"margin-right": '+=' + width + 'px'});
 }
 
 
@@ -21,7 +25,9 @@ $(".faq-banner-button").click(function () {
 function slideOutRightFaqPanel () {
     faqPanelSlideOut.css({"pointer-events": "none"})
 
-    $(".right-panel").animate({"margin-right": '-=30%'}, () => {
+    let width = rightPanel[0].offsetWidth
+
+    rightPanel.animate({"margin-right": '-=' + width + 'px'}, () => {
         hide(0)
         rotate(-90, 0, $(".indicator"), 0)
     });

@@ -133,15 +133,15 @@
   z-index: 4;
 }
 
-@media (min-width: 555px) {
+@media (min-width: 600px) {
   .cookie-banner {
     font-size: initial;
   }
 }
 
-@media (max-width: 554px) {
+@media (max-width: 559px) {
   .cookie-banner {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 
@@ -160,6 +160,7 @@
   right: 15px;
   width: 55px;
   height: 55px;
+  z-index: 2;
 }
 
 .faq-button button {
@@ -190,13 +191,26 @@
 .right-panel {
   position: fixed;
   top: 0;
-  right: -30%;
-  width: 30%;
   height: 97%;
   background: rgb(85, 149, 212);
   color: white;
   overflow-y: scroll;
   z-index: 3;
+}
+
+
+@media (min-width: 600px) {
+  .right-panel {
+    right: -550px;
+    width: 550px;
+  }
+}
+
+@media (max-width: 559px) {
+  .right-panel {
+    right: -300px;
+    width: 300px;
+  }
 }
 
 .right-panel .close {
@@ -379,8 +393,16 @@
   background: #7d7b7b;
 }
 
+.faq-banner-button:hover{
+  background: #636161;
+}
+
 .agree-banner-button {
   background: #ce2d2d;
+}
+
+.agree-banner-button:hover {
+  background: #ac2222;
 }
 
 .flex-space {
