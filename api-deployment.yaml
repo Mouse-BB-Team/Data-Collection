@@ -5,7 +5,7 @@ metadata:
   labels:
     app: dc-api
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: dc-api
@@ -29,9 +29,9 @@ spec:
                 name: postgres
         resources:
          limits:
-          cpu: "0.2"
+          cpu: "0.3"
          requests:
-          cpu: "0.2"
+          cpu: "0.3"
         readinessProbe:
           httpGet:
             path: /health

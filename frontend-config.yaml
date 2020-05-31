@@ -6,11 +6,11 @@ metadata:
     app: dc-frontend
 data:
   PORT: "9090"
-  API_CLIENT_ID: client_id
-  API_CLIENT_SECRET: password
   API_ROUTE_USER_CREATE: http://dc-api/user/create
   API_ROUTE_TOKEN_GRANT: http://dc-api/oauth/token
   API_ROUTE_TOKEN_CHECK: http://dc-api/oauth/check_token
   API_ROUTE_SESSION_ADD: http://dc-api/session/add
+  OAUTH2_TOKENEXPIREDTIME: "3600"
+  OAUTH2_REFRESHTOKENEXPIREDTIME: "604800"
   REDIS_IP: redis
   REDIS_PORT: "80"

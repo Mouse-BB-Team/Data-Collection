@@ -23,8 +23,8 @@ spec:
         envFrom:
             - configMapRef:
                 name: dc-frontend
-            # - secretRef:
-            #     name: dc-frontend
+            - secretRef:
+                name: dc-frontend
             # resources:
                 # limits:
                 # cpu: "0.1"
