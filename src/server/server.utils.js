@@ -81,17 +81,15 @@ const checkRefresh = async (res, refreshToken) => {
 
         const cookieOptions = {
             maxAge: 1000 * accessTokenExp,
-            // sameSite: "strict",
-            // // TODO
-            // secure: true,
+            sameSite: "strict",
+            secure: true,
             httpOnly: true
         }
 
         const refreshCookieOptions = {
             maxAge: 1000 * refreshTokenExp,
-            // sameSite: "strict",
-            // // TODO
-            // secure: true,
+            sameSite: "strict",
+            secure: true,
             httpOnly: true
         }
         res.cookie('mouse-bb-token', responseWithNewToken.access_token, cookieOptions);

@@ -101,17 +101,15 @@ router.post('/api/login', async (req, res) => {
 
             const accessCookieOptions = {
                 maxAge: 1000 * accessTokenExpire,
-                // sameSite: "strict",
-                // // TODO
-                // secure: true,
+                sameSite: "strict",
+                secure: true,
                 httpOnly: true
             }
 
             const refreshCookieOptions = {
                 maxAge: 1000 * refreshTokenExpire,
-                // sameSite: "strict",
-                // // TODO
-                // secure: true,
+                sameSite: "strict",
+                secure: true,
                 httpOnly: true
             }
 
