@@ -1,5 +1,3 @@
-\c
-
 create schema dc;
 
 begin;

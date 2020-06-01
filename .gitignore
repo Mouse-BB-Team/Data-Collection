@@ -35,3 +35,12 @@ Dockerfile
 
 ### Ignore log files ###
 log*
+
+.idea/
+node_modules
+*.iml
+jsLibraryMappings.xml
+vcs.xml
+logs/
+.env
+

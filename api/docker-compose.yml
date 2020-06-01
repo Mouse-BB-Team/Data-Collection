@@ -18,7 +18,7 @@ services:
                         dc_network:
         dc_api:
                 container_name: "data_collection_api"
-                build: ./api/
+                build: .
                 ports:
                         - "8080:8080"
                 environment:
