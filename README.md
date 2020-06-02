@@ -24,4 +24,4 @@
 	gcloud compute addresses create web-static-ip --global
 
 
-![JWT-obtaining-sequence](https://github.com/Bachelor-Degree-2020-2021/Data-Collection/blob/collecting_site/JWT%20token%20obtaining%20sequence.jpg?raw=true)
+![JWT-obtaining-sequence](https://github.com/Mouse-BB-Team/Data-Collection/blob/master/js-proxy/JWT%20token%20obtaining%20sequence.jpg)
