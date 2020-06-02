@@ -41,7 +41,7 @@ class UserControllerTest {
 
     private final String PROPER_LOGIN = "administrator";
     private final String PROPER_PASSWORD = "password";
-    private final String TOO_SHORT_LOGIN = "admin";
+    private final String TOO_SHORT_LOGIN = "admi";
     private final String TOO_SHORT_PASSWORD = "pass";
     private final String TOO_LONG_LOGIN = generateToLongString();
     private final String TOO_LONG_PASSWORD = generateToLongString();

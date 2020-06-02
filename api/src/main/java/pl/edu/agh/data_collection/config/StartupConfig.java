@@ -22,7 +22,7 @@ public class StartupConfig {
     @Value("${default.admin.password}")
     private String adminPassword;
 
-    public static final int MIN_LOGIN_LENGTH = 8;
+    public static final int MIN_LOGIN_LENGTH = 5;
     public static final int MAX_LOGIN_LENGTH = 255;
     public static final int MIN_PASSWORD_LENGTH = 8;
     public static final int MAX_PASSWORD_LENGTH = 255;
