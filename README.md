@@ -96,8 +96,6 @@ Things you need to install before running:
 ```
 Java 8
 Maven
-Postgres
-Redis
 Docker
 ```
 
@@ -106,7 +104,7 @@ Docker
 1. Clone the repo and change the directory:
 ```sh
 git clone https://github.com/Mouse-BB-Team/Data-Collection.git
-cd Data-Collection
+cd Data-Collection/
 ```
 ####API:
 1. Change directory to api/ and build a java package:
