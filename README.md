@@ -106,7 +106,7 @@ Docker
 git clone https://github.com/Mouse-BB-Team/Data-Collection.git
 cd Data-Collection/
 ```
-####API:
+#### API:
 1. Change directory to api/ and build a java package:
 ```
 cd api/
@@ -118,7 +118,7 @@ docker-compose -f docker-compose.yaml up
 ```
 > NOTE: you MUST configure your own env variables in docker-compose.yaml
 
-####JS-Proxy:
+#### JS-Proxy:
 1. Change directory to js-proxy/
 2. Run docker-compose file to deploy js-proxy:
 ```
