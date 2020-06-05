@@ -170,7 +170,7 @@ Our thesis supervisor:
 
 
 [license-shield]: https://img.shields.io/github/license/Mouse-BB-Team/Data-Collection?style=flat-square
-[license-url]: https://github.com/Mouse-BB-Team/Data-Collection/blob/master/LICENSE.txt
+[license-url]: https://github.com/Mouse-BB-Team/Data-Collection/blob/master/LICENSE
 
 
 ## Appendix
