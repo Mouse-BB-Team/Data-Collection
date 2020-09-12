@@ -18,6 +18,6 @@
   "homepage": "https://github.com/Bachelor-Degree-2020-2021/Data-Collection#readme",
   "dependencies": {
     "log4js": "^6.2.1",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   }
 }
